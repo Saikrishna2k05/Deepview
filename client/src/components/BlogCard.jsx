@@ -1,6 +1,12 @@
 import React from 'react';
+import {useNavigate} from 'react-router-dom'
 
 const BlogCard = ({ image, title, author, category, date, excerpt }) => {
+  const navigate=useNavigate();
+  function readMoreHandler()
+  {
+    navigate('/login');
+  }
   return (
     <div className="bg-[#111] border border-[#2a2a2a] rounded-xl overflow-hidden transition duration-300 hover:scale-[1.02] flex flex-col">
       
@@ -16,7 +22,7 @@ const BlogCard = ({ image, title, author, category, date, excerpt }) => {
         <p className="text-gray-400 text-sm mb-4">{excerpt}</p>
 
         <div className="mt-auto">
-          <button className="bg-white text-black px-3 py-1 rounded-md text-sm font-medium hover:bg-[#ffffffcc]">
+          <button className="bg-white text-black px-3 py-1 rounded-md text-sm font-medium hover:bg-[#ffffffcc] cursor-pointer" onClick={readMoreHandler}> 
             Read More
           </button>
         </div>

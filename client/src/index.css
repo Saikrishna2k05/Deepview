@@ -4,3 +4,22 @@ input:-webkit-autofill {
   -webkit-text-fill-color: white !important;
   transition: background-color 9999s ease-out;
 }
+@layer base {
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #070707;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #444;
+    border-radius: 8px;
+    border: 1px solid #111;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #666;
+  }
+}
