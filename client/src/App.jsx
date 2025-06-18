@@ -2,12 +2,13 @@ import { useState } from 'react'
 import Navbar from './components/Navbar.jsx'
 import {Routes, Route} from 'react-router-dom'
 import './App.css'
-import MainLayout from './layouts/mainLayout.jsx'
+import MainLayout from './layouts/MainLayout.jsx'
 import Home from './pages/Home.jsx'
 import Blogs from './pages/Blogs.jsx'
 import About from './pages/About.jsx'
 import Login from './pages/Login.jsx'
 import Signup from './pages/Signup.jsx'
+import Write from './pages/Write.jsx'
 import {Toaster} from 'react-hot-toast'
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route path='/About' element={<About/>}/>
         <Route path='/Login' element={<Login/>}/>
         <Route path='/Signup' element={<Signup/>}/>
+        <Route path='/Write' element={<Write/>}/>
       </Route>
     </Routes>
 

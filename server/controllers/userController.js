@@ -37,7 +37,8 @@ export const login=async(req,res)=>{
         }
         const token=jwt.sign({id: user._id}, process.env.USER_JWT_SECRET, {expiresIn:"1h" });
         res.cookie("token", token, {
-            httpOnly: true
+            httpOnly: true,
+            path: '/'
         })
         return res.status(200).json({
             success: true,
@@ -101,4 +102,24 @@ export const signup=async(req, res)=>{
             message: "Failed to register"
         })
     } 
+}
+
+export const logout=(_, res)=>{
+    try{
+        res.clearCookie("token",{
+        httpOnly: true,
+        path: '/'
+    })
+    return res.status(200).json({
+        success: true,
+        message: "Logout Sucessful"
+    })
+    }
+    catch(err)
+    {
+        return res.status(500).json({
+            success:false,
+            message: err.message || err || "Something went wrong"
+        })
+    }
 }
