@@ -12,6 +12,7 @@
 - **React Hook Form + Zod** – for form handling and validation
 - **React Router DOM** – for routing
 - **Redux** – State management
+- **React-hot-toasts** - For toasts
 
 ---
 
