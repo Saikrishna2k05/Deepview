@@ -22,7 +22,7 @@ export const login=async(req,res)=>{
         const user=await User.findOne({email});
         if(!user)
         {
-            res.status(400).json({
+            return res.status(400).json({
                 success:false,
                 message:"No user with this Email"
             })
@@ -39,7 +39,7 @@ export const login=async(req,res)=>{
         res.cookie("token", token, {
             httpOnly: true
         })
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message:`Welcome back ${user.username}`,
             user
@@ -47,7 +47,7 @@ export const login=async(req,res)=>{
     }
     catch(err)
     {
-         console.log(err);
+        console.error("Login error:", err.message);
         return res.status(500).json({
             success: false,
             message: "Failed to Login"
@@ -88,7 +88,7 @@ export const signup=async(req, res)=>{
             email,
             password:hashedPassword
         })
-        res.status(201).json({
+        return res.status(201).json({
                 success: true,
                 message: "Account Created Successfully"
         })
@@ -101,6 +101,4 @@ export const signup=async(req, res)=>{
             message: "Failed to register"
         })
     } 
-
-
 }
