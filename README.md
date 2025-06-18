@@ -24,5 +24,6 @@
 - **Zod** – for schema validation
 - **bcrypt** – for password hashing
 - **CORS** – for cross-origin access
+- **JWT with Cookies** - for authentication
 
 ---
