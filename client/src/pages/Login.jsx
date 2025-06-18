@@ -2,17 +2,41 @@ import React from 'react'
 import {useForm} from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod';
 import {z} from 'zod'
-import {Link } from 'react-router-dom';
+import {Link, useNavigate } from 'react-router-dom';
+import axios from 'axios'
+import { useDispatch } from 'react-redux';
+import {loginUser} from '../redux/authSlice.js'
+import toast from 'react-hot-toast';
+
 
 
 const Login = () => {
+    const dispatch=useDispatch();
+    const navigate=useNavigate();
    const schema=z.object({
     email: z.string().email(),
     password: z.string().min(8, { message: "Password must be at least 8 characters long" })
   })
   const {register,handleSubmit ,formState: {errors}}=useForm({ resolver: zodResolver(schema) });
-  const submit=(data)=>{
-      console.log(data); //Backend Logic
+  const submit=async({email, password})=>
+    {
+        try
+        {
+        const response=await axios.post('http://localhost:3000/user/login',{email, password}, { withCredentials: true });
+        if(!response.data.success)
+        {
+          toast.error(response.data.message);
+          return;
+        }
+        dispatch(loginUser(response.data.user));
+        navigate('/Blogs');
+        toast.success(response.data.message);
+      }
+      catch(err)
+      {
+        const message=err.response?.data?.message || err.message || "Something went wrong"
+        toast.error(message);
+      }
     }
   return (
     <>

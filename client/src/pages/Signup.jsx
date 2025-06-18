@@ -3,9 +3,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {Link} from 'react-router-dom'
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const schema = z.object({
-  name: z.string().min(1, { message: "Name is required" }),
+  username: z.string().min(1, { message: "Name is required" }),
   email: z.string().email(),
   password: z.string().min(8, { message: "Password must be at least 8 characters long" }),
 });
@@ -14,13 +16,29 @@ const Signup = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
   });
 
-  const submit = (data) => {
-    console.log(data); //Backend logic
+  const submit = async({username, email, password}) => {
+    try
+    {
+      const response=await axios.post('http://localhost:3000/user/signup',{username, email, password},{withCredentials: true});
+      if(!response.data.success)
+      {
+       toast.error(response.data.message);
+        return 
+      }
+      reset();
+      toast.success(response.data.message);
+    }
+    catch(err)
+    {
+      const message=err.response?.data?.message || err.message || "Something went wrong"
+      toast.error(message);
+    }
   };
 
   return (
@@ -35,14 +53,14 @@ const Signup = () => {
         </div>
 
         <div className="flex flex-col gap-2 w-full">
-          <label htmlFor="name">Name</label>
+          <label htmlFor="username">Name</label>
           <input
-            {...register("name")}
+            {...register("username")}
             placeholder="Your name"
             className="bg-black border border-[#2a2a2a] rounded-xl w-full px-4 py-2 outline-none"
           />
-          {errors.name && (
-            <span className="text-red-500">{errors.name.message}</span>
+          {errors.username && (
+            <span className="text-red-500">{errors.username.message}</span>
           )}
         </div>
 

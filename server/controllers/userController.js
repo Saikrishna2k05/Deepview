@@ -1,6 +1,7 @@
 import express from 'express'
 import User from '../models/userModel.js';
 import {z} from 'zod'
+import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 export const login=async(req,res)=>{
     try
@@ -14,6 +15,7 @@ export const login=async(req,res)=>{
         if(!result.success)
         {
             return res.status(400).json({
+                success:false,
                 message:"Validation failed"
             })
         }
@@ -22,17 +24,26 @@ export const login=async(req,res)=>{
         {
             res.status(400).json({
                 success:false,
-                message:"Incorrect email or password"
+                message:"No user with this Email"
             })
         }
-        const isPasswordValid=bcrypt.compare(password, user.password);
-        if(isPasswordValid)
+        const isPasswordValid=await bcrypt.compare(password, user.password);
+        if(!isPasswordValid)
         {
+            return res.status(400).json({
+                success:false,
+                message:"Incorrect password"
+            })
+        }
+        const token=jwt.sign({id: user._id}, process.env.USER_JWT_SECRET, {expiresIn:"1h" });
+        res.cookie("token", token, {
+            httpOnly: true
+        })
         res.status(200).json({
             success: true,
-            message:`Welcome back ${user.username}`
+            message:`Welcome back ${user.username}`,
+            user
         })
-        }
     }
     catch(err)
     {

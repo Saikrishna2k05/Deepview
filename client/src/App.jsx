@@ -1,16 +1,14 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import Navbar from './components/Navbar.jsx'
 import {Routes, Route} from 'react-router-dom'
 import './App.css'
-import { RxFontRoman } from 'react-icons/rx'
 import MainLayout from './layouts/mainLayout.jsx'
 import Home from './pages/Home.jsx'
 import Blogs from './pages/Blogs.jsx'
 import About from './pages/About.jsx'
 import Login from './pages/Login.jsx'
 import Signup from './pages/Signup.jsx'
+import {Toaster} from 'react-hot-toast'
 
 function App() {
   return (
@@ -24,6 +22,18 @@ function App() {
         <Route path='/Signup' element={<Signup/>}/>
       </Route>
     </Routes>
+
+    <Toaster 
+        position="bottom-right"
+        toastOptions={{
+          style: {
+            background: '#111',
+            color: '#fff',
+             border: '1px solid #2a2a2a',
+             borderRadius: '10px',
+          },
+        }}
+      />
     </>
   )
 }
