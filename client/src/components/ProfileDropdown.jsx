@@ -1,7 +1,5 @@
 import { FaUserCircle } from 'react-icons/fa'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { LuUser } from "react-icons/lu";
 import { LuChartColumnBig } from "react-icons/lu";
 
