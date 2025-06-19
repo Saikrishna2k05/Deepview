@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux'
 import { logoutUser } from '../redux/authSlice'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import ProfileDropdown from './ProfileDropdown.jsx'
 
 const Navbar = () => {
   const navigate=useNavigate();
@@ -53,12 +54,16 @@ const Navbar = () => {
           <span>Write</span>
         </NavLink>
         
+         <ProfileDropdown/>
+
         <button
           className='px-4 py-2 rounded-2xl transition-all duration-200 bg-white text-black hover:bg-gray-200 cursor-pointer'
           onClick={logoutHandler}
         >
           Logout
         </button>
+
+       
        </div>
   )
 
@@ -96,14 +101,16 @@ const Navbar = () => {
     <div className="h-16 w-full flex items-center justify-between border-b-1 border-[#2a2a2a] bg-black px-8 sticky top-0 z-50">
       <div className="flex items-center gap-6">
         <img src={logo} alt="DeepView Logo" className="w-35 cursor-pointer" onClick={()=>{navigate('/')}}/>
-        {isLoggedIn && <div className="flex items-center bg-white rounded-xl px-3 py-1">
+        {isLoggedIn && 
+        <div className="flex items-center bg-[#111] border border-[#2a2a2a] rounded-xl px-3 py-1">
           <input
             type="text"
-            className="text-black outline-none bg-transparent placeholder:text-gray-600 w-40"
+            className="text-white outline-none bg-transparent placeholder:text-[#11111] w-40"
             placeholder="Search"
           />
-          <CiSearch className="text-gray-700 w-5 h-5 cursor-pointer" />
-        </div>}
+          <CiSearch className="text-white w-5 h-5 cursor-pointer" />
+        </div>
+        }
       </div>
 
 

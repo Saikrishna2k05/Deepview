@@ -112,7 +112,7 @@ export const logout=(_, res)=>{
     })
     return res.status(200).json({
         success: true,
-        message: "Logout Sucessful"
+        message: "Logout successful"
     })
     }
     catch(err)
