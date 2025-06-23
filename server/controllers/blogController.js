@@ -9,7 +9,7 @@ export const addBlog=async(req,res)=>{
     await Blog.create({
         title,
         subtitle,
-        author: userId,
+        author: user.username,
         description,
         category,
         thumbnail,
@@ -31,13 +31,14 @@ catch(err)
 
 }
 
-export const allBlogs=async(req,res)=>{
+export const allBlogs=async(_,res)=>{
     try
     {
         const allBlogs=await Blog.find({});
         return res.status(200).json({
             success:true,
-            allBlogs
+            allBlogs,
+
         })
     }
     catch(err)

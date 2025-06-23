@@ -9,7 +9,7 @@ const blogSchema=new Schema({
         required: true
     },
     author:{
-        type:mongoose.Schema.Types.ObjectId,
+        type:String,
         ref: 'User'
     },
     description:{

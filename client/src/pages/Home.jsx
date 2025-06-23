@@ -1,62 +1,24 @@
 import React from 'react'
 import HomeImg from '../assets/home-img.png'
 import { useNavigate } from 'react-router-dom';
+import {useSelector, useDispatch} from 'react-redux'
 import BlogCard from '../components/BlogCard';
+import { fetchAllBlogs } from '../redux/blogSlice';
+import { useEffect } from 'react';
+import toast from 'react-hot-toast'
 
 const Home = () => {
   const navigate=useNavigate();
-  const recentBlogs = [
-  {
-    title: 'How to do search engine optimization',
-    author: 'Rahul',
-    category: 'Digital Marketing',
-    date: '05/05/2025',
-    excerpt: 'This is the subtitle for how to make an Ecommerce website',
-    image: 'https://www.rgbwebtech.com/blogs/images/uploads/what-is-seo-search-engin-optimization.png' // Replace with real images later
-  },
-  {
-    title: 'Mastering Minimalist Design',
-    author: 'Aisha',
-    category: 'UI/UX',
-    date: '06/05/2025',
-    excerpt: 'Understanding the power of less and how it enhances focus.',
-    image: 'https://media.geeksforgeeks.org/wp-content/uploads/20240719115108/minimalism-in-web-design.webp'
-  },
-  {
-    title: 'The Psychology of Colors in Branding',
-    author: 'Karan',
-    category: 'Branding',
-    date: '07/05/2025',
-    excerpt: 'Colors influence decision-making more than you think.',
-    image: 'https://miro.medium.com/v2/resize:fit:1200/1*edHRS32A-zEyJDZ4_qiCMA.jpeg'
-  },
-  {
-    title: 'The Psychology of Colors in Branding',
-    author: 'Karan',
-    category: 'Branding',
-    date: '07/05/2025',
-    excerpt: 'Colors influence decision-making more than you think.',
-    image: 'https://miro.medium.com/v2/resize:fit:1200/1*edHRS32A-zEyJDZ4_qiCMA.jpeg'
-  },
-  {
-    title: 'The Psychology of Colors in Branding',
-    author: 'Karan',
-    category: 'Branding',
-    date: '07/05/2025',
-    excerpt: 'Colors influence decision-making more than you think.',
-    image: 'https://miro.medium.com/v2/resize:fit:1200/1*edHRS32A-zEyJDZ4_qiCMA.jpeg'
-  },
-  {
-    title: 'The Psychology of Colors in Branding',
-    author: 'Karan',
-    category: 'Branding',
-    date: '07/05/2025',
-    excerpt: 'Colors influence decision-making more than you think.',
-    image: 'https://miro.medium.com/v2/resize:fit:1200/1*edHRS32A-zEyJDZ4_qiCMA.jpeg'
-  }
+  const dispatch=useDispatch();
+  // const {blogs, loading, error}=useSelector((state)=>state.blog)
+  // useEffect(()=>{
+  //   dispatch(fetchAllBlogs());
 
-]
+  // },[dispatch]);
 
+  // useEffect(()=>{
+  //       if (error) toast.error(error);
+  // },[error])
   return (
     <>
     <div className='text-white flex items-center justify-center p-6'>
@@ -72,16 +34,16 @@ const Home = () => {
     </div>
 
 
-    <div className='text-white'>
+    {/* <div className='text-white'>
       <div className='w-full px-10 mt-10 max-w-6xl'>
         <h2 className='text-4xl font-bold mb-6 border-b pb-2 border-[#2a2a2a] text-center'>Recent Blogs</h2>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-          {recentBlogs.map((blog, index) => (
+          {blogs.map((blog, index) => (
             <BlogCard key={index} {...blog} />
           ))}
         </div>
       </div>
-    </div>
+    </div> */}
 
     </>
   )

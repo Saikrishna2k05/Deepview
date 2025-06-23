@@ -1,38 +1,28 @@
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import axios from 'axios'
 import BlogCard from '../components/BlogCard.jsx'
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAllBlogs } from '../redux/blogSlice.js';
 
 const Blogs = () => {
-  const [blogs, setBlogs] = useState([]);
-
+ const blogs  = useSelector((state) => state.blog.blogs);
+ const dispatch=useDispatch();
   useEffect(() => {
-    async function fetchBlogs() {
-      try {
-        const response = await axios.get('http://localhost:3000/blog/getAll', {
-          withCredentials: true
-        });
-        setBlogs(response.data.allBlogs);
-      } catch (err) {
-        toast.error("Couldn't fetch Blogs");
-        console.error(err);
-      }
-    }
+    dispatch(fetchAllBlogs());
+  }, [dispatch]);
 
-    fetchBlogs();
-  }, []);
-
+  
   return (
     <div className='text-white'>
       <div className='w-full px-10 mt-10 max-w-6xl'>
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-          {blogs.map((blog, index) => (
-            <BlogCard key={index} {...blog} />
-          ))}
-        </div>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+            {blogs.map((blog, index) => (
+              <BlogCard key={index} {...blog} />
+            ))}
+          </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default Blogs;
