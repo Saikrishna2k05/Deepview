@@ -1,7 +1,9 @@
 import React from 'react';
 import {useNavigate} from 'react-router-dom'
+import { format } from 'date-fns';
 
-const BlogCard = ({ thumbnail, title, author, category, subtitle }) => {
+const BlogCard = ({ thumbnail, title, author, category, subtitle, createdAt }) => {
+  const formattedDate = format(new Date(createdAt), 'dd/MM/yy');
   const navigate=useNavigate();
   function readMoreHandler()
   {
@@ -14,7 +16,7 @@ const BlogCard = ({ thumbnail, title, author, category, subtitle }) => {
 
       <div className="p-4 flex flex-col flex-grow">
         <p className="text-sm text-gray-400 mb-1">
-          By {author} | {category} 
+          By {author.username} | {category} | {formattedDate}
         </p>
 
         <h2 className="text-white font-semibold text-lg mb-2">{title}</h2>

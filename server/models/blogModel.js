@@ -9,8 +9,9 @@ const blogSchema=new Schema({
         required: true
     },
     author:{
-        type:String,
-        ref: 'User'
+        type:mongoose.Schema.Types.ObjectId,
+        ref: 'users',
+        required: true
     },
     description:{
         type:String,
@@ -26,7 +27,7 @@ const blogSchema=new Schema({
     },
     likes:{
          type:mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'users'
     },
     comments:{
          type:mongoose.Schema.Types.ObjectId,
@@ -34,5 +35,5 @@ const blogSchema=new Schema({
     }
 },{timestamps: true})
 
-const Blog=mongoose.model('Blogs',blogSchema);
+const Blog=mongoose.model('blogs',blogSchema);
 export default Blog

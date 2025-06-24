@@ -6,17 +6,19 @@ export const addBlog=async(req,res)=>{
     const userId=req.id;
     const user=await User.findById(userId);
 
-    await Blog.create({
+    const newBlog = await Blog.create({
         title,
         subtitle,
-        author: user.username,
+        author: userId,
         description,
         category,
         thumbnail,
     })
+    const populatedBlog = await Blog.findById(newBlog._id).populate('author', 'username');
     return res.status(201).json({
         success:true,
-        message:"Blog created successfully"
+        message:"Blog created successfully",
+        blog: populatedBlog
     })
 }
 catch(err)
@@ -34,15 +36,16 @@ catch(err)
 export const allBlogs=async(_,res)=>{
     try
     {
-        const allBlogs=await Blog.find({});
+        const allBlogs=await Blog.find({}).populate('author', 'username');
         return res.status(200).json({
             success:true,
-            allBlogs,
-
+            allBlogs
         })
     }
     catch(err)
     {
+        console.log(err);
+        
         return res.status(400).json({
             success:false,
             message:"Failed to fetch Blogs"

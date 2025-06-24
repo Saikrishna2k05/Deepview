@@ -12,6 +12,23 @@ export const fetchAllBlogs=createAsyncThunk('fetchBlogs',async(_, { rejectWithVa
     }
 
 })
+
+export const addBlog = createAsyncThunk(
+  'blogs/addBlog',
+  async (blogData, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        'http://localhost:3000/blog/create',
+        blogData,
+        { withCredentials: true }
+      );
+      return response.data.blog;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || err.message);
+    }
+  }
+);
+
 const blogSlice=createSlice({
     name:'blogs',
     initialState:
@@ -20,6 +37,7 @@ const blogSlice=createSlice({
     loading: false,
     error: null,
     },
+     reducers: {}, 
     extraReducers:(builder)=>{
         builder.addCase(fetchAllBlogs.pending,(state)=>{
              state.loading = true;
@@ -32,7 +50,15 @@ const blogSlice=createSlice({
       .addCase(fetchAllBlogs.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(addBlog.fulfilled, (state, action) => {
+        state.blogs.unshift(action.payload); 
+      })
+      .addCase(addBlog.rejected, (state, action) => {
+        state.error = action.payload;
       });
+
+
     }
 })
 
