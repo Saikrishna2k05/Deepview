@@ -1,11 +1,35 @@
 import Blog from "../models/blogModel.js"; 
 import User from '../models/userModel.js'
+import {z} from 'zod'
 export const addBlog=async(req,res)=>{
     try{
     const {title, subtitle,description,category, thumbnail}=req.body;
     const userId=req.id;
-    const user=await User.findById(userId);
-
+    const blogSchema = z.object
+    ({
+        title: z.string().min(1, { message: "Title is required" }),
+        subtitle: z.string().min(1, { message: "Subtitle is required" }),
+        description: z.string()
+                    .refine((val) => 
+                    {
+                    const plain = val.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, '').trim();
+                    return plain.length > 0;
+                    }, 
+                    {message: "Description is required"}),
+        category: z.string().min(1, { message: "Category is required" }),
+        thumbnail: z.string().nullable().refine(val => val && val.trim() !== "", {message: "Thumbnail is required"}),
+    });
+    const result=blogSchema.safeParse({title, subtitle,description,category, thumbnail})
+     if(!result.success)
+    {
+         const errorMessages = result.error.errors.map(err => err.message);
+        return res.status(400).json
+        ({
+                success:false,
+                message:"Validation failed",
+                errorMessages
+        })
+    }
     const newBlog = await Blog.create({
         title,
         subtitle,
@@ -36,7 +60,7 @@ catch(err)
 export const allBlogs=async(_,res)=>{
     try
     {
-        const allBlogs=await Blog.find({}).populate('author', 'username');
+        const allBlogs=await Blog.find({}).populate('author', 'username').sort({createdAt: -1});
         return res.status(200).json({
             success:true,
             allBlogs

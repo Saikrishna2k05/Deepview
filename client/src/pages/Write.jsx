@@ -9,6 +9,13 @@ import { toast } from 'react-hot-toast';
 const Write = () => {
   const editor = useRef(null);
   const dispatch = useDispatch();
+  const defaultValues = {
+  title: '',
+  subtitle: '',
+  description: '',
+  thumbnail: null,
+  category: '',
+};
 
   const {
     register,
@@ -16,28 +23,25 @@ const Write = () => {
     control,
     reset,
     formState: { errors },
-  } = useForm({
-    defaultValues: {
-      title: '',
-      subtitle: '',
-      description: '',    // changed from content
-      thumbnail: null,
-      category: '',
-    },
-  });
+  } = useForm({defaultValues});
 
   const onSubmit = async (data) => {
-    if (!data.title.trim() || !data.description.trim()) {
-      toast.error('Please fill in both title and description');
-      return;
-    }
-
-    try {
+    try 
+    {
       await dispatch(addBlog(data)).unwrap();
       toast.success('Blog published!');
-      reset();
-    } catch (err) {
-      toast.error(`Error: ${err.message || err}`);
+      reset(defaultValues);
+    } 
+    catch (err) 
+    {
+      if (Array.isArray(err.errorMessages)) 
+      {
+        err.errorMessages.forEach((msg) => toast.error(msg));
+      } 
+      else 
+      {
+        toast.error(err);
+      }
     }
   };
 
@@ -48,7 +52,7 @@ const Write = () => {
         <header className="w-full h-16 bg-[#111] border border-[#2a2a2a] rounded-xl flex items-center">
           <input
             type="text"
-            {...register('title', { required: true })}
+            {...register('title')}
             placeholder="Your Blog Title Here..."
             className="w-full text-3xl font-extrabold h-10 rounded-xl outline-none p-5 bg-transparent text-white"
           />
@@ -100,7 +104,7 @@ const Write = () => {
           name="thumbnail"
           control={control}
           render={({ field }) => (
-            <ThumbnailUpload thumbnail={field.value} setThumbnail={field.onChange} />
+            <ThumbnailUpload field={field} />
           )}
         />
 

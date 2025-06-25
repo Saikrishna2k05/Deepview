@@ -15,15 +15,24 @@ export const fetchAllBlogs=createAsyncThunk('fetchBlogs',async(_, { rejectWithVa
 
 export const addBlog = createAsyncThunk(
   'blogs/addBlog',
-  async (blogData, { rejectWithValue }) => {
-    try {
+  async (blogData, { rejectWithValue }) => 
+  {
+    try 
+    {
       const response = await axios.post(
         'http://localhost:3000/blog/create',
         blogData,
         { withCredentials: true }
       );
       return response.data.blog;
-    } catch (err) {
+    } 
+    catch (err) 
+    {
+      const data = err.response?.data;
+      if(data?.errorMessages && Array.isArray(data.errorMessages))
+      {
+        return rejectWithValue({errorMessages: data.errorMessages})
+      }
       return rejectWithValue(err.response?.data?.message || err.message);
     }
   }
@@ -35,13 +44,11 @@ const blogSlice=createSlice({
     {
     blogs: [],
     loading: false,
-    error: null,
     },
      reducers: {}, 
     extraReducers:(builder)=>{
         builder.addCase(fetchAllBlogs.pending,(state)=>{
-             state.loading = true;
-        state.error = null;
+        state.loading = true;
         })
         .addCase(fetchAllBlogs.fulfilled, (state, action) => {
         state.loading = false;
@@ -49,16 +56,10 @@ const blogSlice=createSlice({
       })
       .addCase(fetchAllBlogs.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
       })
       .addCase(addBlog.fulfilled, (state, action) => {
-        state.blogs.unshift(action.payload); 
+        state.blogs.push(action.payload); 
       })
-      .addCase(addBlog.rejected, (state, action) => {
-        state.error = action.payload;
-      });
-
-
     }
 })
 
