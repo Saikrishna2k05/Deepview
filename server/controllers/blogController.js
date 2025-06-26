@@ -1,5 +1,6 @@
 import Blog from "../models/blogModel.js"; 
 import User from '../models/userModel.js'
+import mongoose from 'mongoose';
 import {z} from 'zod'
 export const addBlog=async(req,res)=>{
     try{
@@ -73,6 +74,40 @@ export const allBlogs=async(_,res)=>{
         return res.status(400).json({
             success:false,
             message:"Failed to fetch Blogs"
+        })
+    }
+}
+
+export const getBlogByID=async(req, res)=>{
+    try
+    {
+    const blogId=req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(blogId)) 
+    {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid Blog ID format.',
+    });
+    }
+    const blog=await Blog.findById(blogId);
+    if(!blog) 
+    {
+        return res.status(404).json({
+            success:false,
+            message:"No Blog with this Id."
+        })
+    }
+    res.status(200).json({
+        success:true,
+        blog
+    })
+    }
+    catch(err)
+    {
+        console.log(err);
+        return res.status(400).json({
+            success:false,
+            message:`Something went wrong ${err}`
         })
     }
 
