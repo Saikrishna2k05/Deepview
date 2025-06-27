@@ -2,12 +2,12 @@ import React from 'react';
 import {useNavigate} from 'react-router-dom'
 import { format } from 'date-fns';
 
-const BlogCard = ({ thumbnail, title, author, category, subtitle, createdAt }) => {
+const BlogCard = ({ thumbnail, title, author, category, subtitle, createdAt, _id }) => {
   const formattedDate = format(new Date(createdAt), 'dd/MM/yy');
   const navigate=useNavigate();
   function readMoreHandler()
   {
-    navigate('/login');
+    navigate(`/Blogs/${_id}`);
   }
   return (
     <div className="bg-[#111] border border-[#2a2a2a] rounded-xl overflow-hidden transition duration-300 hover:scale-[1.02] flex flex-col">

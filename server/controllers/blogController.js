@@ -43,7 +43,7 @@ export const addBlog=async(req,res)=>{
     return res.status(201).json({
         success:true,
         message:"Blog created successfully",
-        blog: populatedBlog
+        blog: populatedBlog,
     })
 }
 catch(err)
@@ -89,7 +89,7 @@ export const getBlogByID=async(req, res)=>{
       message: 'Invalid Blog ID format.',
     });
     }
-    const blog=await Blog.findById(blogId);
+    const blog=await Blog.findById(blogId).populate('author','username photoUrl');
     if(!blog) 
     {
         return res.status(404).json({

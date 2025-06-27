@@ -10,10 +10,13 @@ import Login from './pages/Login.jsx'
 import Signup from './pages/Signup.jsx'
 import Write from './pages/Write.jsx'
 import {Toaster} from 'react-hot-toast'
+import Read from './pages/Read.jsx'
+import ScrollToTop from './components/ScrollToTop.jsx'
 
 function App() {
   return (
     <>
+    <ScrollToTop/>
     <Routes>
       <Route path='/' element={<MainLayout/>}>
         <Route index element={<Home/>}/>
@@ -22,6 +25,7 @@ function App() {
         <Route path='/Login' element={<Login/>}/>
         <Route path='/Signup' element={<Signup/>}/>
         <Route path='/Write' element={<Write/>}/>
+        <Route path='/Blogs/:id' element={<Read/>}/>
       </Route>
     </Routes>
 

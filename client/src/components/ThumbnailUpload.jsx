@@ -9,13 +9,13 @@ const ThumbnailUpload = ({ field }) => {
   const handleChange = async (e) => 
     {
     const file = e.target.files[0];
+
       e.target.value = null;
 
-    if (!file) return;
-    console.log(file.type);
-    if(file.type!=='image/jpeg' && file.type!=='image/png')
+    if (!file) return;    
+    if(file.type!=='image/jpeg' && file.type!=='image/png' && file.type!=='image/webp')
     {
-      toast.error('Only PNG/JPG/JPEG files are allowed.')
+      toast.error('Only PNG/JPG/JPEG/WEBP files are allowed.')
       return;
     }
     if (file.size > 10 * 1024 * 1024) 
@@ -61,10 +61,10 @@ const ThumbnailUpload = ({ field }) => {
           <span className="text-white font-medium">
             {loading ? 'Uploading...' : 'Upload Image'}
           </span>
-          <span className="text-sm text-gray-500">PNG, JPG, JPEG up to 10MB</span>
+          <span className="text-sm text-gray-500">PNG, JPG, JPEG & WEBP files up to 10MB</span>
           <input
             type="file"
-            accept="image/jpeg,image/png,image/jpg"
+            accept="image/jpeg,image/png,image/jpg,image/webp"
             onChange={handleChange}
             className="hidden"
             disabled={loading}
