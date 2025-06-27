@@ -29,11 +29,22 @@ const UserBlogs = () => {
   },[])
   return (
     <>
-      {userBlogs.length===0?
-      (<div className="text-white text-center mt-10">You haven’t written any blogs yet.</div>)
-      :(userBlogs.map((userBlog, i)=>{
-        return <UserBlogsCard key={i} blog={userBlog} />
-      }))}
+      <div className="max-w-6xl mx-auto px-4">
+        {userBlogs.length === 0 ? (
+            <div className="flex flex-col items-center justify-center text-white" style={{ height: 'calc(90vh - 4rem)' }}>
+              <p className="text-lg sm:text-3xl font-medium mb-2">
+                You haven’t written any blogs yet.
+              </p>
+              <p className="text-sm sm:text-xl font-thin text-white">
+                Start sharing your thoughts with the world!
+              </p>
+          </div>
+        ) : (
+          userBlogs.map((blog) => (
+            <UserBlogsCard key={blog._id} blog={blog} />
+          ))
+        )}
+    </div>
     </>
   )
 }

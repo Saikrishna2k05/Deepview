@@ -119,7 +119,7 @@ export const getUserBlogs=async(req, res)=>{
         const userBlogs=await Blog.find({author:userId}).populate('author','username').sort({createdAt: -1}).lean();
         if(userBlogs.length===0) 
         {
-            return res.status(204).json({
+            return res.status(200).json({
             success: true,
             message: "No blogs created yet",
             userBlogs: [],
