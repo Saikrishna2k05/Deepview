@@ -13,6 +13,7 @@ import {Toaster} from 'react-hot-toast'
 import Read from './pages/Read.jsx'
 import ScrollToTop from './components/ScrollToTop.jsx'
 import UserBlogs from './pages/UserBlogs.jsx'
+import EditBlog from './pages/EditBlog.jsx'
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path='/Write' element={<Write/>}/>
         <Route path='/Blogs/:id' element={<Read/>}/>
         <Route path='/userBlogs' element={<UserBlogs/>}/>
+        <Route path='/editBlog/:id' element={<EditBlog/>}/>
       </Route>
     </Routes>
 

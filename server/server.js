@@ -19,7 +19,7 @@ app.use(express.json({ limit:'10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 app.use('/user',userApp);
-app.use('/blog',blogApp)
+app.use('/blog',blogApp);
 
 app.listen(PORT,()=>{
     console.log(`Server started at http://localhost:${PORT}`);
