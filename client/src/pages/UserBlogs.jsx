@@ -4,36 +4,28 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast'
 import UserBlogsCardSkeleton from '../components/UserBlogsCardSkeleton.jsx';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserBlogs } from '../redux/blogSlice.js';
 
 const UserBlogs = () => {
   const navigate=useNavigate();
-  const [userBlogs, setUserBlogs]=useState([]);
-  const [loading,setLoading]=useState(true);
+  const {loading, userBlogs}=useSelector((state)=>state.blog);
+  const dispatch=useDispatch();
   useEffect(()=>{
       const getUserBlogs=async()=>
       {
         try
         {
-          setLoading(true);
-          const response=await axios.get('http://localhost:3000/blog/userBlogs',{withCredentials:true})
-          if(!response.data.success)
-          {
-            toast.error(response.data.message || "Something went wrong.");
-            navigate('/Blogs');
-            return;
-          }
-          setUserBlogs(response.data.userBlogs);
+          await dispatch(fetchUserBlogs()).unwrap();
         }
         catch(err)
         {
-          toast.error("Server error");
-        }
-        finally{
-          setLoading(false);
+          const message=err?.message || "Something went wrong"
+          toast.error(message);
         }
     }
     getUserBlogs();
-  },[])
+  },[dispatch])
   return (
   <div className="max-w-6xl mx-auto px-4">
     {loading ? (

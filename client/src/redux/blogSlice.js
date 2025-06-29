@@ -56,11 +56,36 @@ export const updateBlog=createAsyncThunk('updateBlogs',
   }
 )
 
+export const deleteBlogs=createAsyncThunk('deleteBlog',async(blogId,{rejectWithValue})=>{
+  try{
+      await axios.delete(`http://localhost:3000/blog/deleteBlog/${blogId}`,{withCredentials:true});
+      return blogId;
+  }
+  catch(err)
+  {
+    const data = err.response?.data;
+    return rejectWithValue(err.response?.data?.message || err.message);
+  }
+})
+
+export const fetchUserBlogs=createAsyncThunk('userBlogs',async(_,{rejectWithValue})=>{
+  try{
+    const response=await axios.get('http://localhost:3000/blog/userBlogs',{withCredentials:true})
+    return response.data.userBlogs;
+  }
+  catch(err)
+  {
+     const data = err.response?.data;
+    return rejectWithValue(err.response?.data?.message || err.message);
+  }
+})
+
 const blogSlice=createSlice({
     name:'blogs',
     initialState:
     {
     blogs: [],
+    userBlogs:[],
     loading: false,
     },
      reducers: {}, 
@@ -87,6 +112,20 @@ const blogSlice=createSlice({
         blog._id === updatedBlog._id ? updatedBlog : blog
         );
       })
+      .addCase(deleteBlogs.fulfilled,(state, action)=>{
+        state.blogs=state.blogs.filter(blog=>blog._id!==action.payload);
+        state.userBlogs=state.userBlogs.filter(blog=>blog._id!=action.payload);
+      })
+      .addCase(fetchUserBlogs.pending, (state, action)=>{
+          state.loading=true;
+      })
+      .addCase(fetchUserBlogs.fulfilled,(state,action)=>{
+        state.loading=false;
+        state.userBlogs=action.payload;
+      } )
+      .addCase(fetchUserBlogs.rejected, (state) => {
+      state.loading = false;
+    });
     }
 })
 
