@@ -1,3 +1,4 @@
+import { updateBlog } from "../../client/src/redux/blogSlice.js";
 import Blog from "../models/blogModel.js"; 
 import User from '../models/userModel.js'
 import mongoose from 'mongoose';
@@ -222,14 +223,15 @@ export const editBlog=async(req, res)=>{
     await blog.save();
     return res.status(200).json({
         success:true,
-        message:"Updated blog successfully"
+        message:"Updated blog successfully",
+        updatedBlog: blog
     })
     }
     catch(err)
     {
         res.status(400).json({
         success:false,
-        message:err.message || "Something went wrong"
+        message:err.message || "Something went wrong",
         })
     }
 }

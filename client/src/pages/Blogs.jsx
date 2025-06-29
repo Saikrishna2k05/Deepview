@@ -9,8 +9,11 @@ const Blogs = () => {
  const {blogs, loading}  = useSelector((state) => state.blog);
  const dispatch=useDispatch();
   useEffect(() => {
+    if(blogs.length===0)
+    {
     dispatch(fetchAllBlogs());
-  }, [dispatch]);
+    }
+  }, [dispatch, blogs.length]);
 
   
   return (
@@ -21,7 +24,7 @@ const Blogs = () => {
             ? Array.from({ length: 6 }).map((_, i) => <BlogSkeleton key={i} />)
             : blogs.map((blog, index) => 
               (
-                <BlogCard key={index} {...blog} />
+                <BlogCard key={blog._id} {...blog} />
               )) 
             }
           </div>

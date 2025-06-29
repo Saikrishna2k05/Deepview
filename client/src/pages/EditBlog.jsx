@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import ThumbnailUpload from '../components/ThumbnailUpload';
 import BlogWriteSkeleton from '../components/BlogWriteSkeleton.jsx'
+import {updateBlog} from '../redux/blogSlice.js'
 
 const EditBlog = () => {
   const { id } = useParams();
@@ -51,13 +52,9 @@ const EditBlog = () => {
     fetchBlog();
   }, []);
 
-  const onSubmit = async ({ title, subtitle, description, thumbnail, category }) => {
+  const onSubmit = async (data) => {
     try {
-      const response=await axios.put(`http://localhost:3000/blog/editBlog/${id}` , { title, subtitle, description, thumbnail, category }, { headers: { "Content-Type": "application/json" }, withCredentials: true })
-      if(!response.data.success)
-      {
-        toast.error(response.data.message);
-      }
+      await dispatch(updateBlog({id, updatedData:data})).unwrap();
       toast.success("Blog updated successfully!");
     } catch (err) {
       if (Array.isArray(err.errorMessages)) {
