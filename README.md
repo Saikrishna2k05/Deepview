@@ -13,6 +13,8 @@
 - **React Router DOM** – for routing
 - **Redux** – State management
 - **React-hot-toasts** - For toasts
+- **Jodit** - For Rich text editor
+-- **HeadlessUI** - For Profile dropdown
 
 ---
 
