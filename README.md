@@ -14,7 +14,7 @@
 - **Redux** – State management
 - **React-hot-toasts** - For toasts
 - **Jodit** - For Rich text editor
--- **HeadlessUI** - For Profile dropdown
+- **HeadlessUI** - For Profile dropdown
 
 ---
 
