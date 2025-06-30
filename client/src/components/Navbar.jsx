@@ -20,7 +20,7 @@ const Navbar = () => {
   const dispatch=useDispatch();
   const [inputVal, setInputVal]=useState("");
   const location = useLocation();
-  const debouncedValue=useDebounce(inputVal, 190);
+  const debouncedValue=useDebounce(inputVal, 175);
   useEffect(() => {
     const encodedQuery = encodeURIComponent(debouncedValue.trim());
     if (location.pathname === "/Blogs") {
