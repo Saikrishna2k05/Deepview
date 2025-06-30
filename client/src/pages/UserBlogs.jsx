@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import UserBlogsCard from '../components/UserBlogsCard.jsx'
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast'
 import UserBlogsCardSkeleton from '../components/UserBlogsCardSkeleton.jsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserBlogs } from '../redux/blogSlice.js';
 
 const UserBlogs = () => {
-  const navigate=useNavigate();
   const {loading, userBlogs}=useSelector((state)=>state.blog);
   const dispatch=useDispatch();
   useEffect(()=>{

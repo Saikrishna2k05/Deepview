@@ -1,9 +1,13 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 import axios from 'axios'
 
-export const fetchAllBlogs=createAsyncThunk('fetchBlogs',async(_, { rejectWithValue })=>{
-    try{
-    const response=await axios.get('http://localhost:3000/blog/getAll',{withCredentials: true} )
+export const fetchAllBlogs=createAsyncThunk('fetchBlogs',async(search = "", { rejectWithValue })=>{
+    try
+    {
+      const url = search
+        ? `http://localhost:3000/blog/getAll?search=${search}`
+        : `http://localhost:3000/blog/getAll`;
+    const response=await axios.get(url,{withCredentials: true} )
     return response.data.allBlogs;
     }
     catch(err)

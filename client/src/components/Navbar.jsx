@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import logo from '../assets/deepview1.jpg'
 import { NavLink } from 'react-router-dom'
 import { CiSearch } from 'react-icons/ci'
@@ -10,10 +10,25 @@ import { logoutUser } from '../redux/authSlice'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import ProfileDropdown from './ProfileDropdown.jsx'
+import { fetchAllBlogs } from '../redux/blogSlice.js'
+import { useLocation } from 'react-router-dom';
+import { useDebounce } from './UseDebounce.jsx'
+
 
 const Navbar = () => {
   const navigate=useNavigate();
   const dispatch=useDispatch();
+  const [inputVal, setInputVal]=useState("");
+  const location = useLocation();
+  const debouncedValue=useDebounce(inputVal, 190);
+  useEffect(() => {
+    const encodedQuery = encodeURIComponent(debouncedValue.trim());
+    if (location.pathname === "/Blogs") {
+      navigate(`/Blogs?search=${encodedQuery}`);
+      dispatch(fetchAllBlogs(debouncedValue));
+    }
+  }, [debouncedValue]);
+
   async function logoutHandler()
   {
     try
@@ -107,6 +122,7 @@ const Navbar = () => {
             type="text"
             className="text-white outline-none bg-transparent placeholder:text-[#11111] w-40"
             placeholder="Search"
+            onChange={(e)=>setInputVal(e.target.value)}
           />
           <CiSearch className="text-white w-5 h-5 cursor-pointer" />
         </div>
