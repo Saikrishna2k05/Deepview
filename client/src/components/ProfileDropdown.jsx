@@ -9,7 +9,10 @@ const ProfileDropdown = () => {
   const navigate=useNavigate();
   function userBlogsHandler()
   {
-    navigate('/userBlogs')
+    navigate('/userBlogs');
+  }
+  function profileHandler(){
+      navigate('/Profile');
   }
   return (
     <Menu as="div" className="relative inline-block text-left">
@@ -23,6 +26,7 @@ const ProfileDropdown = () => {
             {() => (
               <button
                  className={`text-white flex items-center gap-1.5 hover:bg-[#2b2b2bbd] hover:rounded-xl px-4 py-2 text-left cursor-pointer`}
+                  onClick={profileHandler}
               >
                 <LuUser />
                 Profile
