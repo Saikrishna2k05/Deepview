@@ -1,36 +1,102 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("personal");
+  const [uploading, setUploading] = useState(false);
 
-  const user = {
-    username: "P Saikrishna",
-    email: "spasupul11@gitam.in",
-    contact: "+91 83286 81612",
-    bio: "",
-    occupation: "",
-    photoUrl: "",
-    instagram: "",
-    linkedin: "",
-    github: "",
-    facebook: ""
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+  useEffect(() => {
+    const getDetails = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/user/profile', {
+          withCredentials: true,
+        });
+        if (!response.data.success) return;
+        const profileDetails = response.data.details[0];
+        reset(profileDetails);
+      } catch (err) {
+        toast.error("Failed to load profile data.");
+      }
+    };
+    getDetails();
+  }, [reset]);
+
+  const handlePhotoChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", import.meta.env.VITE_CLOUDINARY_PRESET);
+    formData.append("cloud_name", import.meta.env.VITE_CLOUDINARY_CLOUDNAME);
+
+    try {
+      setUploading(true);
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUDNAME}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await res.json();
+      reset({ ...watch(), photoUrl: data.secure_url });
+      toast.success("Photo uploaded successfully!");
+    } catch (err) {
+      toast.error("Photo upload failed.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const onSubmit = (data) => {
+    const updateProfile = async () => {
+      try {
+        const res = await axios.put(
+          'http://localhost:3000/user/updateProfile',
+          data,
+          { withCredentials: true }
+        );
+        if (!res.data.success) return toast.error("Update failed");
+        toast.success("Profile updated successfully!");
+      } catch (err) {
+        const message = err?.message || "Something went wrong";
+        toast.error(message);
+      }
+    };
+    updateProfile();
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] bg-[#000000] text-white">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex min-h-[calc(100vh-4rem)] bg-black text-white"
+    >
       <div className="w-64 p-4 border-r border-[#2a2a2a]">
         <div className="space-y-2">
           <button
-            className={`block w-full text-left px-4 py-2 rounded ${
-              activeTab === "personal" ? "bg-orange-600" : "hover:bg-gray-700"
+            type="button"
+            className={`block w-full text-left px-4 py-2 rounded cursor-pointer ${
+              activeTab === "personal" ? "bg-orange-600" : "hover:bg-[#2a2a2a]"
             }`}
             onClick={() => setActiveTab("personal")}
           >
             Personal Detail
           </button>
           <button
-            className={`block w-full text-left px-4 py-2 rounded ${
-              activeTab === "social" ? "bg-orange-600" : "hover:bg-gray-700"
+            type="button"
+            className={`block w-full text-left px-4 py-2 rounded cursor-pointer ${
+              activeTab === "social" ? "bg-orange-600" : "hover:bg-[#2a2a2a]"
             }`}
             onClick={() => setActiveTab("social")}
           >
@@ -42,43 +108,79 @@ const Profile = () => {
       <div className="flex-1 overflow-y-auto">
         {activeTab === "personal" && (
           <div className="space-y-6 p-6">
-            <div className="flex items-center space-x-4">
+            <div className="relative w-24 h-24">
               <img
-                src={user.photoUrl || "/default-avatar.png"}
+                src={watch("photoUrl") || "/default-avatar.png"}
                 alt="profile"
-                className="w-24 h-24 rounded-full bg-gray-600"
+                className="w-full h-full rounded-full bg-[#2a2a2a] object-cover"
               />
-              <div>
-                <p className="text-sm text-gray-400">Profile Photo</p>
-                <p className="text-xs text-gray-500">PNG, JPG (Max. 1MB)</p>
-              </div>
+              <label
+                htmlFor="photoInput"
+                className="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity cursor-pointer"
+              >
+                {uploading ? (
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent animate-spin rounded-full" />
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 text-white"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M15.232 5.232l3.536 3.536M9 13l3.536-3.536m2.829-2.829a2.121 2.121 0 113 3L10.5 20.5H7v-3.5L17.293 6.707z"
+                    />
+                  </svg>
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  id="photoInput"
+                  onChange={handlePhotoChange}
+                  className="hidden"
+                />
+              </label>
             </div>
+
             <div>
               <label className="block text-sm mb-1">Name</label>
               <input
-                className="bg-[#2c2c2e] w-full p-2 rounded"
-                defaultValue={user.username}
+                {...register("username", { required: "Username is required" })}
+                className="bg-[#2a2a2a] w-full p-2 rounded"
               />
+              {errors.username && (
+                <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>
+              )}
             </div>
+
             <div>
               <label className="block text-sm mb-1">Email</label>
               <input
-                className="bg-[#2c2c2e] w-full p-2 rounded"
-                defaultValue={user.email}
+                {...register("email", { required: "Email is required" })}
+                className="bg-[#2a2a2a] w-full p-2 rounded"
               />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+              )}
             </div>
+
             <div>
               <label className="block text-sm mb-1">Bio</label>
               <input
-                className="bg-[#2c2c2e] w-full p-2 rounded"
-                defaultValue={user.bio}
+                {...register("bio")}
+                className="bg-[#2a2a2a] w-full p-2 rounded"
               />
             </div>
+
             <div>
               <label className="block text-sm mb-1">Occupation</label>
               <input
-                className="bg-[#2c2c2e] w-full p-2 rounded"
-                defaultValue={user.occupation}
+                {...register("occupation")}
+                className="bg-[#2a2a2a] w-full p-2 rounded"
               />
             </div>
           </div>
@@ -89,35 +191,44 @@ const Profile = () => {
             <div>
               <label className="block text-sm mb-1">Instagram</label>
               <input
-                className="bg-[#2c2c2e] w-full p-2 rounded"
-                defaultValue={user.instagram}
+                {...register("instagram")}
+                className="bg-[#2a2a2a] w-full p-2 rounded"
               />
             </div>
             <div>
               <label className="block text-sm mb-1">LinkedIn</label>
               <input
-                className="bg-[#2c2c2e] w-full p-2 rounded"
-                defaultValue={user.linkedin}
+                {...register("linkedin")}
+                className="bg-[#2a2a2a] w-full p-2 rounded"
               />
             </div>
             <div>
               <label className="block text-sm mb-1">GitHub</label>
               <input
-                className="bg-[#2c2c2e] w-full p-2 rounded"
-                defaultValue={user.github}
+                {...register("github")}
+                className="bg-[#2a2a2a] w-full p-2 rounded"
               />
             </div>
             <div>
               <label className="block text-sm mb-1">Facebook</label>
               <input
-                className="bg-[#2c2c2e] w-full p-2 rounded"
-                defaultValue={user.facebook}
+                {...register("facebook")}
+                className="bg-[#2a2a2a] w-full p-2 rounded"
               />
             </div>
           </div>
         )}
+
+        <div className="p-6">
+          <button
+            type="submit"
+            className="bg-orange-600 px-4 py-2 rounded hover:bg-orange-700"
+          >
+            Save Changes
+          </button>
+        </div>
       </div>
-    </div>
+    </form>
   );
 };
 

@@ -21,15 +21,7 @@ const EditBlog = () => {
     control,
     reset,
     formState: { errors },
-  } = useForm({
-    defaultValues: {
-      title: '',
-      subtitle: '',
-      description: '',
-      thumbnail: '',
-      category: '',
-    },
-  });
+  } = useForm();
 
   useEffect(() => {
     const fetchBlog = async () => {

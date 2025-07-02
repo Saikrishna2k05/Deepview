@@ -110,7 +110,6 @@ const blogSlice=createSlice({
       .addCase(updateBlog.fulfilled, (state, action)=>{
           state.loading = false;
           const updatedBlog = action.payload;
-          console.log("Updating blog in Redux:", updatedBlog);
           if (!updatedBlog || !updatedBlog._id) return;
           state.blogs = state.blogs.map((blog) =>
         blog._id === updatedBlog._id ? updatedBlog : blog

@@ -193,20 +193,6 @@ export const editBlog=async(req, res)=>{
         })
     }
     const blogData=result.data;
-    if (
-    blog.title === blogData.title &&
-    blog.subtitle === blogData.subtitle &&
-    blog.description === blogData.description &&
-    blog.category === blogData.category &&
-    blog.thumbnail === blogData.thumbnail
-    ) 
-    {
-    return res.status(200).json({
-        success: true,
-        message: "No changes made",
-    });
-    }
-
     if(blog.title!==blogData.title)
     {
         blog.title=blogData.title

@@ -123,3 +123,89 @@ export const logout=(_, res)=>{
         })
     }
 }
+
+export const profileDetails=async(req, res)=>{
+    try{
+    const userId=req.id;
+    const details=await User.find({
+        _id:userId
+    })
+    if(!details){
+        return res.status(400).json({
+            success:false,
+            message:"Unable to get Profile details."
+        })
+    }
+    res.status(200).json({
+        success:true,
+        details
+    })
+    }
+    catch(err)
+    {
+        res.status(200).json({
+        success:false,
+        message: err
+    })
+    }
+}
+
+export const updateProfileDetails=async(req, res)=>{
+    try{
+    const {username, email, password, bio, occupation, photoUrl, instagram, linkedin, github, facebook}=req.body;
+    const userId=req.id;
+    const userDetails=await User.findById(userId);
+    if(userDetails.username!=username)
+    {
+        userDetails.username=username
+    }
+    if(userDetails.email!=email)
+    {
+        userDetails.email=email
+    }
+    if(userDetails.password!=password)
+    {
+        userDetails.password=password
+    }
+    if(userDetails.bio!=bio)
+    {
+        userDetails.bio=bio
+    }
+    if(userDetails.occupation!=occupation)
+    {
+        userDetails.occupation=occupation
+    }
+    if(userDetails.photoUrl!=photoUrl)
+    {
+        userDetails.photoUrl=photoUrl
+    }
+    if(userDetails.instagram!=instagram)
+    {
+        userDetails.instagram=instagram
+    }
+    if(userDetails.linkedin!=linkedin)
+    {
+        userDetails.linkedin=linkedin
+    }
+    if(userDetails.github!=github)
+    {
+        userDetails.github=github
+    }
+    if(userDetails.facebook!=facebook)
+    {
+        userDetails.facebook=facebook
+    }
+    await userDetails.save();
+    return res.status(200).json({
+        success:true,
+        message:"Updated Profile successfully",
+    })
+}
+catch(err)
+{
+     res.status(400).json({
+        success:false,
+        message:err.message || "Something went wrong",
+        })
+}
+}
