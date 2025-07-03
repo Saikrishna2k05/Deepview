@@ -3,10 +3,11 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { LuUser } from "react-icons/lu";
 import { LuChartColumnBig } from "react-icons/lu";
 import { useNavigate } from 'react-router-dom';
-
+import { useSelector } from 'react-redux';
 
 const ProfileDropdown = () => {
   const navigate=useNavigate();
+  const pfp=useSelector((state)=>state.user.photoUrl);
   function userBlogsHandler()
   {
     navigate('/userBlogs');
@@ -17,7 +18,10 @@ const ProfileDropdown = () => {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <MenuButton>
-        <FaUserCircle className="text-white w-9 h-9 cursor-pointer " />
+        {
+          pfp?(<img src={pfp} alt="" className='w-9 h-9 cursor-pointer rounded-4xl' />):
+        (<FaUserCircle className="text-white w-9 h-9 cursor-pointer " />)
+        }
       </MenuButton>
 
       <MenuItems className="absolute right-0 mt-1 w-40 p-2 origin-top-right bg-[#111] border border-[#2a2a2a] divide-y divide-gray-700 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">

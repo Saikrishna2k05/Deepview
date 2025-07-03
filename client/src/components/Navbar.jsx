@@ -13,6 +13,7 @@ import ProfileDropdown from './ProfileDropdown.jsx'
 import { fetchAllBlogs } from '../redux/blogSlice.js'
 import { useLocation } from 'react-router-dom';
 import { useDebounce } from './UseDebounce.jsx'
+import {clearPhoto} from '../redux/userSlice.js'
 
 
 const Navbar = () => {
@@ -40,6 +41,7 @@ const Navbar = () => {
       }
       toast.success(response.data.message)
       dispatch(logoutUser());
+      dispatch(clearPhoto());
       navigate('/');
     }
     catch(err)
