@@ -12,6 +12,7 @@ const userMiddleware=(req,res,next)=>{
          }
          const jwtDecoded=jwt.verify(token, process.env.USER_JWT_SECRET);
          req.id=jwtDecoded.id;
+         req.role=jwtDecoded.role;
          next();
      }
      catch(err)

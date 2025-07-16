@@ -9,9 +9,6 @@ const ThumbnailUpload = ({ field }) => {
   const handleChange = async (e) => 
     {
     const file = e.target.files[0];
-
-      e.target.value = null;
-
     if (!file) return;    
     if(file.type!=='image/jpeg' && file.type!=='image/png' && file.type!=='image/webp')
     {

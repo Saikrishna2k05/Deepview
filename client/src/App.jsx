@@ -15,6 +15,7 @@ import ScrollToTop from './components/ScrollToTop.jsx'
 import UserBlogs from './pages/UserBlogs.jsx'
 import EditBlog from './pages/EditBlog.jsx'
 import Profile from './pages/Profile.jsx'
+import { Users } from './pages/Users.jsx'
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path='/Blogs/:id' element={<Read/>}/>
         <Route path='/userBlogs' element={<UserBlogs/>}/>
         <Route path='/Profile' element={<Profile/>}/>
+        <Route path='/Users' element={<Users/>}/>
         <Route path='/editBlog/:id' element={<EditBlog/>}/>
       </Route>
     </Routes>

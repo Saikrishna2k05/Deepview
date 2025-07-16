@@ -14,7 +14,7 @@ const EditBlog = () => {
   const editor = useRef(null);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
-
+  
   const {
     register,
     handleSubmit,
@@ -46,7 +46,7 @@ const EditBlog = () => {
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(updateBlog({id, updatedData:data})).unwrap();
+      dispatch(updateBlog({id, updatedData:data})).unwrap();
       toast.success("Blog updated successfully!");
     } catch (err) {
       if (Array.isArray(err.errorMessages)) {

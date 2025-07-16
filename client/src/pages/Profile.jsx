@@ -87,23 +87,29 @@ const Profile = () => {
       <div className="w-64 p-4 border-r border-[#2a2a2a]">
         <div className="space-y-2">
           <button
-            type="button"
-            className={`block w-full text-left px-4 py-2 rounded cursor-pointer ${
-              activeTab === "personal" ? "bg-orange-600" : "hover:bg-[#2a2a2a]"
-            }`}
-            onClick={() => setActiveTab("personal")}
-          >
-            Personal Detail
-          </button>
+          type="button"
+          className={`block w-full text-left font-semibold px-4 py-2 rounded cursor-pointer transition-colors duration-150 ${
+            activeTab === "personal"
+              ? "bg-[#01b19d] text-black"
+              : "text-white hover:bg-[#01b19cdd]"
+          }`}
+          onClick={() => setActiveTab("personal")}
+        >
+          Personal Details
+        </button>
+
           <button
-            type="button"
-            className={`block w-full text-left px-4 py-2 rounded cursor-pointer ${
-              activeTab === "social" ? "bg-orange-600" : "hover:bg-[#2a2a2a]"
-            }`}
-            onClick={() => setActiveTab("social")}
-          >
-            Social Links
-          </button>
+          type="button"
+          className={`block w-full text-left font-semibold px-4 py-2 rounded cursor-pointer transition-colors duration-150 ${
+            activeTab === "social"
+              ? "bg-[#01b19d] text-black"
+              : "text-white hover:bg-[#01b19cdd]"
+          }`}
+          onClick={() => setActiveTab("social")}
+        >
+          Social Links
+        </button>
+
         </div>
       </div>
 
@@ -121,14 +127,12 @@ const Profile = () => {
     htmlFor="photoInput"
     className="absolute inset-0 rounded-full overflow-hidden cursor-pointer group"
   >
-    {/* Hover effect with low-opacity of same image */}
     <img
       src={watch("photoUrl") || "/default-avatar.png"}
       alt="overlay"
       className="w-full h-full object-cover opacity-0 group-hover:opacity-40 transition-opacity duration-300"
     />
     
-    {/* Spinner or Edit Icon */}
     <div className="absolute inset-0 flex items-center justify-center">
       {uploading ? (
         <div className="w-6 h-6 border-2 border-white border-t-transparent animate-spin rounded-full" />
@@ -197,6 +201,14 @@ const Profile = () => {
                 className="bg-[#2a2a2a] w-full p-2 rounded"
               />
             </div>
+            <div >
+          <button
+            type="submit"
+            className="bg-[#01b19d] p-2.5 w-full mb-4 mt-4 font-semibold text-black rounded hover:bg-[#01b19cdd] cursor-pointer"
+          >
+            Save Changes
+          </button>
+        </div>
           </div>
         )}
 
@@ -230,17 +242,17 @@ const Profile = () => {
                 className="bg-[#2a2a2a] w-full p-2 rounded"
               />
             </div>
-          </div>
-        )}
-
-        <div className="p-6">
+            <div >
           <button
             type="submit"
-            className="bg-orange-600 px-4 py-2 rounded hover:bg-orange-700"
+            className="bg-[#01b19d] p-2.5 w-full mb-4 mt-4 font-semibold text-black rounded hover:bg-[#01b19cdd] cursor-pointer"
           >
             Save Changes
           </button>
         </div>
+          </div>
+        )}
+
       </div>
     </form>
   );

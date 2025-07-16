@@ -4,10 +4,8 @@ const ConfirmDeleteModal = ({ isOpen, onClose, onConfirm }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-center items-center">
-      <div className="absolute inset-0 bg-black/30 backdrop-blur-xs"></div>
-
-      <div className="relative z-10 bg-[#111] p-6 rounded-xl max-w-sm w-full text-white border border-[#2a2a2a] shadow-lg">
+    <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/40 backdrop-blur-sm">
+      <div className="bg-[#111] p-6 rounded-xl max-w-sm w-full text-white border border-[#2a2a2a] shadow-lg">
         <h2 className="text-xl font-semibold mb-4">Delete Blog?</h2>
         <p className="text-gray-400 mb-6">
           Deleting a blog is <span className="text-red-500">permanent</span>. Are you sure you want to proceed?

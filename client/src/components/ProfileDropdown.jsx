@@ -19,7 +19,7 @@ const ProfileDropdown = () => {
     <Menu as="div" className="relative inline-block text-left">
       <MenuButton>
         {
-          pfp?(<img src={pfp} alt="" className='w-9 h-9 cursor-pointer rounded-4xl' />):
+          pfp?(<img src={pfp} alt="" className='w-9 h-9 rounded-full object-cover cursor-pointer' />):
         (<FaUserCircle className="text-white w-9 h-9 cursor-pointer " />)
         }
       </MenuButton>

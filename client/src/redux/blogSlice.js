@@ -84,6 +84,17 @@ export const fetchUserBlogs=createAsyncThunk('userBlogs',async(_,{rejectWithValu
   }
 })
 
+export const adminDeleteBlogs=createAsyncThunk('adminDeleteBlog', async(blogId, {rejectWithValue})=>{
+  try{
+      await axios.delete(`http://localhost:3000/admin/deleteBlog/${blogId}`,{withCredentials:true});
+      return blogId;
+  }
+  catch(err)
+  {
+    const data = err.response?.data;
+    return rejectWithValue(err.response?.data?.message || err.message);
+  }
+})
 const blogSlice=createSlice({
     name:'blogs',
     initialState:
@@ -110,7 +121,6 @@ const blogSlice=createSlice({
       .addCase(updateBlog.fulfilled, (state, action)=>{
           state.loading = false;
           const updatedBlog = action.payload;
-          if (!updatedBlog || !updatedBlog._id) return;
           state.blogs = state.blogs.map((blog) =>
         blog._id === updatedBlog._id ? updatedBlog : blog
         );
@@ -128,7 +138,10 @@ const blogSlice=createSlice({
       } )
       .addCase(fetchUserBlogs.rejected, (state) => {
       state.loading = false;
-    });
+    })
+    .addCase(adminDeleteBlogs.fulfilled, (state, action)=>{
+      state.blogs=state.blogs.filter(blog=>blog._id!==action.payload);
+    })
     }
 })
 export default blogSlice.reducer;

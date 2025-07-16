@@ -35,7 +35,7 @@ export const login=async(req,res)=>{
                 message:"Incorrect password"
             })
         }
-        const token=jwt.sign({id: user._id}, process.env.USER_JWT_SECRET, {expiresIn:"2h" });
+        const token=jwt.sign({id: user._id, role: user.role }, process.env.USER_JWT_SECRET, {expiresIn:"2h" });
         res.cookie("token", token, {
             httpOnly: true,
             path: '/'

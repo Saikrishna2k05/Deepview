@@ -231,6 +231,7 @@ export const editBlog=async(req, res)=>{
 
 export const deleteBlog=async(req, res)=>{
     try{
+    
     const blogId=req.params.blogId;
     const userId=req.id;
     const blog=await Blog.findById(blogId);
@@ -261,6 +262,24 @@ catch(err)
         success:false,
         message
     })
+    
 }
 
+}
+
+export const adminDelete=async(req, res)=>{
+    const blogId=req.params.blogId;
+    const blog=await Blog.findById(blogId);
+    if(!blog)
+    {
+        return res.status(404).json({
+            success:false,
+            message:"No blog with this Id"
+        })
+    }
+    await blog.deleteOne();
+    res.status(200).json({
+        success:true,
+        message:"Blog Deleted Sucessfully"
+    })
 }

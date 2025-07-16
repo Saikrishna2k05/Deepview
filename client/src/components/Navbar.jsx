@@ -22,6 +22,7 @@ const Navbar = () => {
   const [inputVal, setInputVal]=useState("");
   const location = useLocation();
   const debouncedValue=useDebounce(inputVal, 175);
+  const role=useSelector((state)=>state.auth.user?.role);
   useEffect(() => {
     const encodedQuery = encodeURIComponent(debouncedValue.trim());
     if (location.pathname === "/Blogs") {
@@ -84,6 +85,35 @@ const Navbar = () => {
        </div>
   )
 
+  const adminNav=(
+    <div className="flex items-center gap-6 text-white">
+          <NavLink
+          to="/Blogs"
+          className={({ isActive }) =>
+            isActive ? "text-[#01b19d] font-semibold" : "hover:text-gray-300"
+          }
+        >
+          Blogs
+        </NavLink>
+        <NavLink
+          to="/Users"
+          className={({ isActive }) =>
+            `flex  items-center gap-0.5 ${isActive ? "text-[#01b19d] font-semibold" : "hover:text-gray-300"}`
+          }
+        >
+          <span>Users</span>
+        </NavLink>
+        
+        <button
+          className='px-4 py-2 rounded-2xl transition-all duration-200 bg-white text-black hover:bg-gray-200 cursor-pointer'
+          onClick={logoutHandler}
+        >
+          Logout
+        </button>
+
+       
+       </div>
+  )
   const guestNav=(
         <div className="flex items-center gap-6 text-white">
         <NavLink
@@ -131,9 +161,8 @@ const Navbar = () => {
         }
       </div>
 
-
       {isLoggedIn? 
-       loggedInNav
+       role=='admin'?adminNav: loggedInNav
       :
         guestNav
       }

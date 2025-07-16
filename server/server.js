@@ -5,6 +5,7 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 import blogApp from './routes/blogRoutes.js';
 import cookieParser from 'cookie-parser';
+import adminApp from './routes/adminRoutes.js';
 
 dotenv.config();
 const app=express();
@@ -20,7 +21,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 app.use('/user',userApp);
 app.use('/blog',blogApp);
-
+app.use('/admin', adminApp);
 app.listen(PORT,()=>{
     console.log(`Server started at http://localhost:${PORT}`);
     connectDB();

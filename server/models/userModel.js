@@ -36,6 +36,11 @@ const userSchema=new Schema({
     },
     facebook: { 
         type: String, default: "" 
+    },
+    role:{
+        type:String,
+        enum:['user', 'admin'],
+        default:'user'
     }
 },{timestamps: true})
 
