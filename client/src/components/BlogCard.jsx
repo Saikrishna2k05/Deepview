@@ -22,7 +22,7 @@ const BlogCard = ({ thumbnail, title, author, category, subtitle, createdAt, _id
         </p>
         <h2 className="text-white font-semibold text-lg mb-2">{title}</h2>
         <p className="text-gray-400 text-sm mb-4">{subtitle}</p>
-        <div className="mt-auto flex gap-2">
+        <div className="mt-auto flex gap-1">
           <button
             className="bg-white text-black px-3 py-1 rounded-md text-sm font-medium hover:bg-[#ffffffcc] cursor-pointer"
             onClick={readMoreHandler}
@@ -31,11 +31,12 @@ const BlogCard = ({ thumbnail, title, author, category, subtitle, createdAt, _id
           </button>
           {role === 'admin' && (
             <button
-              className="bg-red-600 text-white p-2 rounded-full text-sm font-medium hover:bg-red-800 cursor-pointer"
-              onClick={() => onDelete(_id)}
-            >
-              <FiTrash2 className="h-5 w-5" />
-            </button>
+                    onClick={() => onDelete(_id)}
+                    className="text-red-500 hover:text-red-700 p-2 rounded-full cursor-pointer"
+                    title="Delete User"
+                  >
+                    <FiTrash2 className="h-6 w-6" />
+                  </button>
           )}
         </div>
       </div>

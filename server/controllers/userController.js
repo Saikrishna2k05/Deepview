@@ -1,5 +1,6 @@
 import express from 'express'
 import User from '../models/userModel.js';
+import Blog from "../models/blogModel.js"; 
 import {z} from 'zod'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
@@ -208,4 +209,47 @@ catch(err)
         message:err.message || "Something went wrong",
         })
 }
+}
+
+export const adminUsers=async(req, res)=>{
+    try{
+    const users=await User.find({email: { $ne: 'admin@deepview.com' }}, '-password');
+    res.status(200).json({
+        success:true,
+        users
+    })
+    }
+    catch(err)
+    {
+        res.status(400).json({
+            success:false,
+            error: err?.message
+        })
+    }
+
+}
+
+export const deleteUser=async(req, res)=>{
+    try{
+    const userId=req.params.userId;
+    await User.deleteOne({
+        _id: userId
+    });
+    await Blog.deleteMany({
+        author: userId
+    })
+    res.status(200).json({
+        success:true,
+        message:"Deleted the User"
+    })
+}
+catch(err)
+{
+    res.status(400).json({
+        success:false,
+        message:err?.message
+    })
+}
+
+
 }

@@ -15,7 +15,7 @@ import ScrollToTop from './components/ScrollToTop.jsx'
 import UserBlogs from './pages/UserBlogs.jsx'
 import EditBlog from './pages/EditBlog.jsx'
 import Profile from './pages/Profile.jsx'
-import { Users } from './pages/Users.jsx'
+import Users from './pages/Users.jsx'
 
 function App() {
   return (

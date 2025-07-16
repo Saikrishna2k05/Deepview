@@ -1,5 +1,6 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 import axios from 'axios'
+import { deleteUser } from './userSlice';
 
 export const fetchAllBlogs=createAsyncThunk('fetchBlogs',async(search = "", { rejectWithValue })=>{
     try
@@ -141,6 +142,10 @@ const blogSlice=createSlice({
     })
     .addCase(adminDeleteBlogs.fulfilled, (state, action)=>{
       state.blogs=state.blogs.filter(blog=>blog._id!==action.payload);
+    })
+    .addCase(deleteUser.fulfilled, (state,action)=>{
+        const deletedUserId = action.payload;
+        state.blogs=state.blogs.filter((blog)=>blog.author._id!=deletedUserId)
     })
     }
 })
