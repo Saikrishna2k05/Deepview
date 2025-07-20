@@ -14,6 +14,8 @@ import { fetchAllBlogs } from '../redux/blogSlice.js'
 import { useLocation } from 'react-router-dom';
 import { useDebounce } from './UseDebounce.jsx'
 import {clearPhoto} from '../redux/userSlice.js'
+import CategoryFilter from './CategoryFilter.jsx'
+
 
 
 const Navbar = () => {
@@ -23,12 +25,20 @@ const Navbar = () => {
   const location = useLocation();
   const debouncedValue=useDebounce(inputVal, 175);
   const role=useSelector((state)=>state.auth.user?.role);
+  const [search, setSearch]=useState(false);
+  useEffect(()=>{    
+    if(location.pathname=="/Blogs")
+    {
+      setSearch(true);
+    }
+    else{
+      setSearch(false);
+    }
+  },[location.pathname])
   useEffect(() => {
     const encodedQuery = encodeURIComponent(debouncedValue.trim());
-    if (location.pathname === "/Blogs") {
       navigate(`/Blogs?search=${encodedQuery}`);
       dispatch(fetchAllBlogs(debouncedValue));
-    }
   }, [debouncedValue]);
 
   async function logoutHandler()
@@ -70,8 +80,7 @@ const Navbar = () => {
         >
           <FiEdit/>
           <span>Write</span>
-        </NavLink>
-        
+        </NavLink>        
          <ProfileDropdown/>
 
         <button
@@ -146,9 +155,10 @@ const Navbar = () => {
   )
   return (
     <div className="h-16 w-full flex items-center justify-between border-b-1 border-[#2a2a2a] bg-black px-8 sticky top-0 z-50">
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-4">
         <img src={logo} alt="DeepView Logo" className="w-35 cursor-pointer" onClick={()=>{navigate('/')}}/>
-        {isLoggedIn && 
+        {isLoggedIn && search && 
+        <>  
         <div className="flex items-center bg-[#111] border border-[#2a2a2a] rounded-xl px-3 py-1">
           <input
             type="text"
@@ -158,6 +168,8 @@ const Navbar = () => {
           />
           <CiSearch className="text-white w-5 h-5 cursor-pointer" />
         </div>
+        <CategoryFilter/>
+        </>
         }
       </div>
 

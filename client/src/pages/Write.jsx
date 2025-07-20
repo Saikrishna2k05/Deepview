@@ -82,6 +82,8 @@ const Write = () => {
                 toolbarSticky: false,
                 iframe: false,
                 toolbarButtonSize: 'middle',
+                enter: 'P', 
+                removeEmptyBlocks: false, 
                 buttons: [
                   'bold', 'italic', 'underline', '|',
                   'ul', 'ol', '|',

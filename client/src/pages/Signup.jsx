@@ -2,9 +2,12 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import {loginUser} from '../redux/authSlice.js'
+
 
 const schema = z.object({
   username: z.string().min(1, { message: "Name is required" }),
@@ -13,6 +16,8 @@ const schema = z.object({
 });
 
 const Signup = () => {
+  const dispatch=useDispatch();
+  const navigate=useNavigate();
   const {
     register,
     handleSubmit,
@@ -31,8 +36,15 @@ const Signup = () => {
        toast.error(response.data.message);
         return 
       }
-      reset();
-      toast.success(response.data.message);
+      const res=await axios.post('http://localhost:3000/user/login',{email, password}, { withCredentials: true });
+        if(!res.data.success)
+        {
+          toast.error(res.data.message);
+          return;
+        }
+        dispatch(loginUser(res.data.user));
+        navigate('/Blogs');
+        toast.success("Signup and login successful!");
     }
     catch(err)
     {

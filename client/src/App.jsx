@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Navbar from './components/Navbar.jsx'
-import {Routes, Route} from 'react-router-dom'
+import {Routes, Route, useNavigate} from 'react-router-dom'
 import './App.css'
 import MainLayout from './layouts/MainLayout.jsx'
 import Home from './pages/Home.jsx'
@@ -16,8 +16,18 @@ import UserBlogs from './pages/UserBlogs.jsx'
 import EditBlog from './pages/EditBlog.jsx'
 import Profile from './pages/Profile.jsx'
 import Users from './pages/Users.jsx'
+import { useSelector } from 'react-redux'
 
 function App() {
+    const navigate = useNavigate();
+    const isLoggedIn = useSelector((state) => state.auth.isAuthenticated);
+    useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/Blogs");
+    }
+  }, [isLoggedIn]);
+
+
   return (
     <>
     <ScrollToTop/>

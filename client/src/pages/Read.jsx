@@ -27,9 +27,10 @@ const Read = () => {
         <BlogMetaData author={blog.author} date={blog.createdAt} description={blog.description}/>
       </div>
       <img src={`${blog.thumbnail}`} alt="Blog thumbnail" className='w-full mt-6 rounded-lg' />
-      <div className="text-white text-xl mt-6 leading-relaxed" 
-      dangerouslySetInnerHTML={{ __html: blog.description }}>
-      </div>
+      <div className="prose prose-invert max-w-none text-white text-xl mt-6 leading-relaxed"
+     dangerouslySetInnerHTML={{ __html: blog.description }}>
+    </div>
+
     </div>
   )
 }

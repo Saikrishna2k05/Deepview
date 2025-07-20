@@ -24,12 +24,12 @@ const ProfileDropdown = () => {
         }
       </MenuButton>
 
-      <MenuItems className="absolute right-0 mt-1 w-40 p-2 origin-top-right bg-[#111] border border-[#2a2a2a] divide-y divide-gray-700 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+      <MenuItems className="absolute right-0 mt-1 w-40 p-2 origin-top-right bg-[#1f1f1f] border border-[#333] divide-y divide-gray-700 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
         <div className="px-1 py-1 flex flex-col  text-white">
           <MenuItem>
             {() => (
               <button
-                 className={`text-white flex items-center gap-1.5 hover:bg-[#2b2b2bbd] hover:rounded-xl px-4 py-2 text-left cursor-pointer`}
+                 className={`text-white flex items-center gap-1.5 hover:bg-[#2f2f2f] hover:rounded-xl px-4 py-2 text-left cursor-pointer`}
                   onClick={profileHandler}
               >
                 <LuUser />
@@ -40,7 +40,7 @@ const ProfileDropdown = () => {
           <MenuItem>
             {() => (
               <button
-                className={`text-white flex items-center gap-1.5 hover:bg-[#2b2b2bbd] hover:rounded-xl  px-4 py-2 text-left cursor-pointer`}
+                className={`text-white flex items-center gap-1.5 hover:bg-[#2f2f2f] hover:rounded-xl  px-4 py-2 text-left cursor-pointer`}
                 onClick={userBlogsHandler}
               >
                 <LuChartColumnBig/>

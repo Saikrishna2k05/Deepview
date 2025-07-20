@@ -1,6 +1,6 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 import axios from 'axios'
-import { deleteUser } from './userSlice';
+import { deleteUser } from './userSlice.js';
 
 export const fetchAllBlogs=createAsyncThunk('fetchBlogs',async(search = "", { rejectWithValue })=>{
     try
