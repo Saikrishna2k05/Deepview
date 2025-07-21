@@ -4,6 +4,8 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import {setPhoto} from '../redux/userSlice.js'
 import {useDispatch} from 'react-redux'
+import { LuPencil  } from "react-icons/lu";
+
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("personal");
@@ -130,27 +132,14 @@ const Profile = () => {
     <img
       src={watch("photoUrl") || "/default-avatar.png"}
       alt="overlay"
-      className="w-full h-full object-cover opacity-0 group-hover:opacity-40 transition-opacity duration-300"
+      className="w-full h-full object-cover opacity-0 group-hover:opacity-40 group-hover:blur-lg transition-all"
     />
     
     <div className="absolute inset-0 flex items-center justify-center">
       {uploading ? (
         <div className="w-6 h-6 border-2 border-white border-t-transparent animate-spin rounded-full" />
       ) : (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 text-white opacity-0 group-hover:opacity-100 transition-opacity"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M15.232 5.232l3.536 3.536M9 13l3.536-3.536m2.829-2.829a2.121 2.121 0 113 3L10.5 20.5H7v-3.5L17.293 6.707z"
-          />
-        </svg>
+        <LuPencil className='h-6 w-6 text-white opacity-0 group-hover:opacity-100 transition-opacity'/>
       )}
     </div>
 

@@ -18,15 +18,10 @@ export const fetchAllBlogs=createAsyncThunk('fetchBlogs',async({search = "" , ca
       
       let baseUrl = 'http://localhost:3000/blog/getAll';
       const queryString = params.toString();
-      console.log(queryString);
       
       if (queryString) {
         baseUrl += `?${queryString}`;
       }
-      console.log(baseUrl);
-      // const url = search
-      //   ? `http://localhost:3000/blog/getAll?search=${search}`
-      //   : `http://localhost:3000/blog/getAll`;
     const response=await axios.get(baseUrl,{withCredentials: true} )
     return response.data.allBlogs;
     }

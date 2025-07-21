@@ -24,8 +24,22 @@ const Navbar = () => {
   const [inputVal, setInputVal]=useState("");
   const location = useLocation();
   const debouncedValue=useDebounce(inputVal, 175);
-  const role=useSelector((state)=>state.auth.user?.role);
+  const role=useSelector((state)=>state.auth.user);
+    const isLoggedIn=useSelector((state)=>state.auth.isAuthenticated);
+
   const [search, setSearch]=useState(false);
+  function logoHandler()
+  {
+    if(isLoggedIn)
+    {
+      navigate('/Blogs');
+      return;
+    }
+    else{
+      navigate('/');
+      return;
+    }
+  }
   useEffect(()=>{    
     if(location.pathname=="/Blogs")
     {
@@ -64,7 +78,6 @@ const Navbar = () => {
       toast.error(message);
     }
   }
-  const isLoggedIn=useSelector((state)=>state.auth.isAuthenticated);
   const loggedInNav=(
     <div className="flex items-center gap-6 text-white">
           <NavLink
@@ -159,7 +172,7 @@ const Navbar = () => {
   return (
     <div className="h-16 w-full flex items-center justify-between border-b-1 border-[#2a2a2a] bg-black px-8 sticky top-0 z-50">
       <div className="flex items-center gap-4">
-        <img src={logo} alt="DeepView Logo" className="w-35 cursor-pointer" onClick={()=>{navigate('/')}}/>
+        <img src={logo} alt="DeepView Logo" className="w-35 cursor-pointer" onClick={logoHandler}/>
         {isLoggedIn && search && 
         <>  
         <div className="flex items-center bg-[#111] border border-[#2a2a2a] rounded-xl px-3 py-1">

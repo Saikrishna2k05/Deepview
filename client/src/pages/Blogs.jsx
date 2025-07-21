@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import BlogCard from '../components/BlogCard.jsx';
 import BlogSkeleton from '../components/BlogSkeleton.jsx';
@@ -13,16 +13,16 @@ const Blogs = () => {
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('search') || "";
   const categoryQuery=searchParams.get('category') || "";
-  
+  const lastFetchedQuery = useRef({ search: '', category: '' });  
   const [showModal, setShowModal] = useState(false);
   const [selectedBlogId, setSelectedBlogId] = useState(null);
 
   useEffect(() => {
-    if (searchQuery === "" && categoryQuery=="" && blogs.length === 0) {
-      dispatch(fetchAllBlogs({ search: "", category: "" }));
-    }
-    else{
-       dispatch(fetchAllBlogs({ search: searchQuery, category: categoryQuery }));
+    const firstRender=(searchQuery === "" && categoryQuery=="" && blogs.length === 0);
+    const queryChanged=(lastFetchedQuery.current.search!==searchQuery) || (lastFetchedQuery.current.category!==categoryQuery);
+    if (firstRender || queryChanged) 
+    {
+      dispatch(fetchAllBlogs({ search: searchQuery, category: categoryQuery }));
     }
   }, [dispatch, searchQuery, categoryQuery]);
 
