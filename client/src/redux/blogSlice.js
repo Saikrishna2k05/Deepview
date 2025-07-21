@@ -2,13 +2,32 @@ import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 import axios from 'axios'
 import { deleteUser } from './userSlice.js';
 
-export const fetchAllBlogs=createAsyncThunk('fetchBlogs',async(search = "", { rejectWithValue })=>{
+export const fetchAllBlogs=createAsyncThunk('fetchBlogs',async({search = "" , category=""}, { rejectWithValue })=>{
     try
     {
-      const url = search
-        ? `http://localhost:3000/blog/getAll?search=${search}`
-        : `http://localhost:3000/blog/getAll`;
-    const response=await axios.get(url,{withCredentials: true} )
+      const params=new URLSearchParams();
+      
+      if(search)
+      {
+        params.append("search", search);
+      }
+      if(category)
+      {
+        params.append("category", category);
+      }
+      
+      let baseUrl = 'http://localhost:3000/blog/getAll';
+      const queryString = params.toString();
+      console.log(queryString);
+      
+      if (queryString) {
+        baseUrl += `?${queryString}`;
+      }
+      console.log(baseUrl);
+      // const url = search
+      //   ? `http://localhost:3000/blog/getAll?search=${search}`
+      //   : `http://localhost:3000/blog/getAll`;
+    const response=await axios.get(baseUrl,{withCredentials: true} )
     return response.data.allBlogs;
     }
     catch(err)

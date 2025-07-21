@@ -36,9 +36,12 @@ const Navbar = () => {
     }
   },[location.pathname])
   useEffect(() => {
-    const encodedQuery = encodeURIComponent(debouncedValue.trim());
-      navigate(`/Blogs?search=${encodedQuery}`);
-      dispatch(fetchAllBlogs(debouncedValue));
+    const params=new URLSearchParams();
+    params.set("search", debouncedValue);
+      if(location.pathname == '/Blogs') 
+      {
+      navigate(`/Blogs?${params.toString()}`);
+      } 
   }, [debouncedValue]);
 
   async function logoutHandler()

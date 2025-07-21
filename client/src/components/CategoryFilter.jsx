@@ -2,6 +2,8 @@ import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { fetchAllBlogs } from '../redux/blogSlice';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -9,13 +11,21 @@ function classNames(...classes) {
 
 export default function CategoryFilter() {
   const navigate=useNavigate();
+  const dispatch=useDispatch();
   function categoryHandler(category)
   {
+    if(category=='All')
+    {
+      navigate('/Blogs');
+      dispatch(fetchAllBlogs({ search: "", category: "" }));
+      return;
+
+    }
     const params=new URLSearchParams();
     params.set("category", category);
-    navigate(`/Blogs?${params.toString()}`)
+    navigate(`/Blogs?${params.toString()}`);
   }
-  const categories=['Entertainment','Lifestyle','Tech','Education','Personal','Others'];
+  const categories=['All','Entertainment','Lifestyle','Tech','Education','Personal','Others'];
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>

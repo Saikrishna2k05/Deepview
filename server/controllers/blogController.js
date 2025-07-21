@@ -63,14 +63,22 @@ catch(err)
 export const allBlogs=async(req,res)=>{
     try
     {
-        const searchQuery=req.query.search || "";
-        const regex=new RegExp(searchQuery,"i");
-        const allBlogs=await Blog.find({
-            $or:[
+        const search=req.query.search;
+        const category=req.query.category;
+        let filters={};
+        if(search)
+        {
+            const regex=new RegExp(search,"i");
+            filters.$or=[
                 {title: {$regex: regex}},
                 {subtitle: {$regex: regex}},
             ]
-        }).populate('author', 'username').sort({createdAt: -1});
+        }
+        if(category)
+        {
+            filters.category=category;
+        }
+        const allBlogs=await Blog.find(filters).populate('author', 'username').sort({createdAt: -1});
         return res.status(200).json({
             success:true,
             allBlogs

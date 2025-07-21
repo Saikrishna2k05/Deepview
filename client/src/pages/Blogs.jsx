@@ -12,15 +12,20 @@ const Blogs = () => {
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('search') || "";
+  const categoryQuery=searchParams.get('category') || "";
   
   const [showModal, setShowModal] = useState(false);
   const [selectedBlogId, setSelectedBlogId] = useState(null);
 
   useEffect(() => {
-    if (searchQuery === "" && blogs.length === 0) {
-      dispatch(fetchAllBlogs(searchQuery));
+    if (searchQuery === "" && categoryQuery=="" && blogs.length === 0) {
+      dispatch(fetchAllBlogs({ search: "", category: "" }));
     }
-  }, [dispatch, blogs.length, searchQuery]);
+    else{
+       dispatch(fetchAllBlogs({ search: searchQuery, category: categoryQuery }));
+    }
+  }, [dispatch, searchQuery, categoryQuery]);
+
 
   const handleDeleteClick = (id) => {
     setSelectedBlogId(id);
@@ -41,7 +46,7 @@ const Blogs = () => {
 
   return (
     <div className='text-white'>
-      {(!loading && searchQuery && blogs.length === 0) ? (
+      {(!loading && (searchQuery || categoryQuery) && blogs.length === 0) ? (
         <div className="flex flex-col items-center justify-center text-white" style={{ height: 'calc(90vh - 4rem)' }}>
           <p className="text-lg sm:text-3xl font-medium mb-2">No blogs found for your search.</p>
           <p className="text-sm sm:text-xl font-thin text-white">Try a different keyword or check back later.</p>
