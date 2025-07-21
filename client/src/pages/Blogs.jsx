@@ -23,6 +23,7 @@ const Blogs = () => {
     if (firstRender || queryChanged) 
     {
       dispatch(fetchAllBlogs({ search: searchQuery, category: categoryQuery }));
+      lastFetchedQuery.current = { search: searchQuery, category: categoryQuery };
     }
   }, [dispatch, searchQuery, categoryQuery]);
 
