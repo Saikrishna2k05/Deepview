@@ -2,22 +2,10 @@ import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 import axios from 'axios'
 import { deleteUser } from './userSlice.js';
 
-export const fetchAllBlogs=createAsyncThunk('fetchBlogs',async({category=""}, { rejectWithValue })=>{
+export const fetchAllBlogs=createAsyncThunk('fetchBlogs',async(_ , { rejectWithValue })=>{
     try
-    {
-      const params=new URLSearchParams();
-      
-      if(category)
-      {
-        params.append("category", category);
-      }
-      
+    { 
       let baseUrl = 'http://localhost:3000/blog/getAll';
-      const queryString = params.toString();
-      
-      if (queryString) {
-        baseUrl += `?${queryString}`;
-      }
     const response=await axios.get(baseUrl,{withCredentials: true} );    
     return response.data;
     }
@@ -52,6 +40,35 @@ export const searchBlogs=createAsyncThunk('searchBlogs',async({search = "" }, { 
       return rejectWithValue(err.response?.data?.message || err.message);
     }
 })
+
+
+
+export const categoryFilter=createAsyncThunk('categoryFilter',async({category="" }, { rejectWithValue })=>{
+    try
+    {
+      const params=new URLSearchParams();
+      
+      if(category)
+      {
+        params.append("category", category);
+      }
+    
+      let baseUrl = 'http://localhost:3000/blog/categoryFilter';
+      const queryString = params.toString();
+      
+      if (queryString) {
+        baseUrl += `?${queryString}`;
+      }
+    const response=await axios.get(baseUrl,{withCredentials: true} );    
+    return response.data.categoryFilter;
+    }
+    catch(err)
+    {
+      return rejectWithValue(err.response?.data?.message || err.message);
+    }
+})
+
+
 export const addBlog = createAsyncThunk(
   'addBlogs',
   async (blogData, { rejectWithValue }) => 
@@ -138,9 +155,15 @@ const blogSlice=createSlice({
     blogs: [],
     searchResults:[],
     userBlogs:[],
+    categoryBlogs:[],
     loading: false,
+    lastFetchedQuery: null
     },
-     reducers: {     }, 
+     reducers: {  
+      setLastFetchedQuery: (state, action) => {
+    state.lastFetchedQuery = action.payload;
+  }
+        }, 
     extraReducers:(builder)=>{
 
 
@@ -194,7 +217,16 @@ const blogSlice=createSlice({
        state.loading = false;
         state.searchResults=action.payload;
     })
+    .addCase(categoryFilter.pending, (state, action)=>{
+      state.loading=true;
+    })
+    .addCase(categoryFilter.fulfilled, (state, action)=>{
+      state.loading=false;
+      state.categoryBlogs=action.payload;
+    })
     }
 })
+
+export const { setLastFetchedQuery } = blogSlice.actions;
 
 export default blogSlice.reducer;

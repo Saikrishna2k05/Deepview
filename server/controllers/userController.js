@@ -153,7 +153,7 @@ export const profileDetails=async(req, res)=>{
 
 export const updateProfileDetails=async(req, res)=>{
     try{
-    const {username, email, password, bio, occupation, photoUrl, instagram, linkedin, github, facebook}=req.body;
+    const {username, email, bio, occupation, photoUrl, instagram, linkedin, github, facebook}=req.body;
     const userId=req.id;
     const userDetails=await User.findById(userId);
     if(userDetails.username!=username)
@@ -163,10 +163,6 @@ export const updateProfileDetails=async(req, res)=>{
     if(userDetails.email!=email)
     {
         userDetails.email=email
-    }
-    if(userDetails.password!=password)
-    {
-        userDetails.password=password
     }
     if(userDetails.bio!=bio)
     {

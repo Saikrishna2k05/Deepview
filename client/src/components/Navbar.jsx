@@ -22,7 +22,7 @@ const Navbar = () => {
   const dispatch=useDispatch();
   const [inputVal, setInputVal]=useState("");
   const location = useLocation();
-  const debouncedValue=useDebounce(inputVal, 175);
+  const debouncedValue=useDebounce(inputVal, 250);
   const role=useSelector((state)=>state.auth.user?.role);
     const isLoggedIn=useSelector((state)=>state.auth.isAuthenticated);
 

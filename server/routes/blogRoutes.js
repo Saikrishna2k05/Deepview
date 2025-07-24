@@ -1,5 +1,5 @@
 import express from 'express'
-import { addBlog, allBlogs, getBlogByID, getUserBlogs, editBlog, deleteBlog, searchedBlogs} from '../controllers/blogController.js';
+import { addBlog, allBlogs, getBlogByID, getUserBlogs, editBlog, deleteBlog, searchedBlogs, categoryFilter} from '../controllers/blogController.js';
 import userMiddleware from '../middlewares/userMiddleware.js'
 const blogApp=express.Router();
 blogApp.post("/create", userMiddleware, addBlog);
@@ -8,6 +8,7 @@ blogApp.get("/userBlogs",userMiddleware,getUserBlogs);
 blogApp.put("/editBlog/:id", userMiddleware, editBlog);
 blogApp.delete("/deleteBlog/:blogId",userMiddleware, deleteBlog);
 blogApp.get("/searchBlogs", userMiddleware, searchedBlogs);
+blogApp.get("/categoryFilter", userMiddleware, categoryFilter);
 blogApp.get("/:id",userMiddleware, getBlogByID);
 
 export default blogApp

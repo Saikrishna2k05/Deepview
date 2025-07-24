@@ -1,23 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import {setPhoto} from '../redux/userSlice.js'
-import {useDispatch} from 'react-redux'
-import { LuPencil  } from "react-icons/lu";
+import { setPhoto } from '../redux/userSlice.js';
+import { useDispatch } from 'react-redux';
+import { LuPencil } from 'react-icons/lu';
 
+// Zod Schema
+const schema = z.object({
+  username: z.string().min(1, { message: "Username is required" }),
+  email: z.string().trim().min(1, { message: "Email is required" }).email({ message: "Enter a valid email address" }),
+  bio: z.string().optional(),
+  occupation: z.string().optional(),
+  photoUrl: z.string().url().optional(),
+  instagram: z.string().url("Invalid URL").or(z.literal("")).optional(),
+  linkedin: z.string().url("Invalid URL").or(z.literal("")).optional(),
+  github: z.string().url("Invalid URL").or(z.literal("")).optional(),
+  facebook: z.string().url("Invalid URL").or(z.literal("")).optional()
+});
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("personal");
   const [uploading, setUploading] = useState(false);
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
+
   const {
     register,
     handleSubmit,
     watch,
     reset,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    resolver: zodResolver(schema),
+  });
 
   useEffect(() => {
     const getDetails = async () => {
@@ -26,8 +43,7 @@ const Profile = () => {
           withCredentials: true,
         });
         if (!response.data.success) return;
-        const profileDetails = response.data.details[0];
-        reset(profileDetails);
+        reset(response.data.details[0]);
       } catch (err) {
         toast.error("Failed to load profile data.");
       }
@@ -43,6 +59,7 @@ const Profile = () => {
     formData.append("file", file);
     formData.append("upload_preset", import.meta.env.VITE_CLOUDINARY_PRESET);
     formData.append("cloud_name", import.meta.env.VITE_CLOUDINARY_CLOUDNAME);
+
     try {
       setUploading(true);
       const res = await fetch(
@@ -55,63 +72,55 @@ const Profile = () => {
       const data = await res.json();
       reset({ ...watch(), photoUrl: data.secure_url });
       toast.success("Photo uploaded successfully!");
-    } catch (err) {
+    } catch {
       toast.error("Photo upload failed.");
     } finally {
       setUploading(false);
     }
   };
 
-  const onSubmit = (data) => {
-    const updateProfile = async () => {
-      try {
-        const res = await axios.put(
-          'http://localhost:3000/user/updateProfile',
-          data,
-          { withCredentials: true }
-        );
-        dispatch(setPhoto(data.photoUrl));
-        if (!res.data.success) return toast.error("Update failed");
-        toast.success("Profile updated successfully!");
-      } catch (err) {
-        const message = err?.message || "Something went wrong";
-        toast.error(message);
-      }
-    };
-    updateProfile();
+  const onSubmit = async (data) => {
+    try {
+      const res = await axios.put(
+        'http://localhost:3000/user/updateProfile',
+        data,
+        { withCredentials: true }
+      );
+      dispatch(setPhoto(data.photoUrl));
+      if (!res.data.success) return toast.error("Update failed");
+      toast.success("Profile updated successfully!");
+    } catch (err) {
+      const message = err?.message || "Something went wrong";
+      toast.error(message);
+    }
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="flex min-h-[calc(100vh-4rem)] bg-black text-white"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="flex min-h-[calc(100vh-4rem)] bg-black text-white">
       <div className="w-64 p-4 border-r border-[#2a2a2a]">
         <div className="space-y-2">
           <button
-          type="button"
-          className={`block w-full text-left font-semibold px-4 py-2 rounded cursor-pointer transition-colors duration-150 ${
-            activeTab === "personal"
-              ? "bg-[#01b19d] text-black"
-              : "text-white hover:bg-[#01b19cdd]"
-          }`}
-          onClick={() => setActiveTab("personal")}
-        >
-          Personal Details
-        </button>
-
+            type="button"
+            className={`block w-full text-left font-semibold px-4 py-2 rounded cursor-pointer transition-colors duration-150 ${
+              activeTab === "personal"
+                ? "bg-[#01b19d] text-black"
+                : "text-white hover:bg-[#01b19cdd]"
+            }`}
+            onClick={() => setActiveTab("personal")}
+          >
+            Personal Details
+          </button>
           <button
-          type="button"
-          className={`block w-full text-left font-semibold px-4 py-2 rounded cursor-pointer transition-colors duration-150 ${
-            activeTab === "social"
-              ? "bg-[#01b19d] text-black"
-              : "text-white hover:bg-[#01b19cdd]"
-          }`}
-          onClick={() => setActiveTab("social")}
-        >
-          Social Links
-        </button>
-
+            type="button"
+            className={`block w-full text-left font-semibold px-4 py-2 rounded cursor-pointer transition-colors duration-150 ${
+              activeTab === "social"
+                ? "bg-[#01b19d] text-black"
+                : "text-white hover:bg-[#01b19cdd]"
+            }`}
+            onClick={() => setActiveTab("social")}
+          >
+            Social Links
+          </button>
         </div>
       </div>
 
@@ -119,60 +128,53 @@ const Profile = () => {
         {activeTab === "personal" && (
           <div className="space-y-6 p-6">
             <div className="relative w-24 h-24">
-  <img
-    src={watch("photoUrl") || "/default-avatar.png"}
-    alt="profile"
-    className="w-full h-full rounded-full bg-[#2a2a2a] object-cover"
-  />
-  
-  <label
-    htmlFor="photoInput"
-    className="absolute inset-0 rounded-full overflow-hidden cursor-pointer group"
-  >
-    <img
-      src={watch("photoUrl") || "/default-avatar.png"}
-      alt="overlay"
-      className="w-full h-full object-cover opacity-0 group-hover:opacity-40 group-hover:blur-lg transition-all"
-    />
-    
-    <div className="absolute inset-0 flex items-center justify-center">
-      {uploading ? (
-        <div className="w-6 h-6 border-2 border-white border-t-transparent animate-spin rounded-full" />
-      ) : (
-        <LuPencil className='h-6 w-6 text-white opacity-0 group-hover:opacity-100 transition-opacity'/>
-      )}
-    </div>
-
-    <input
-      type="file"
-      accept="image/*"
-      id="photoInput"
-      onChange={handlePhotoChange}
-      className="hidden"
-    />
-  </label>
-</div>
+              <img
+                src={watch("photoUrl") || "/default-avatar.png"}
+                alt="profile"
+                className="w-full h-full rounded-full bg-[#2a2a2a] object-cover"
+              />
+              <label
+                htmlFor="photoInput"
+                className="absolute inset-0 rounded-full overflow-hidden cursor-pointer group"
+              >
+                <img
+                  src={watch("photoUrl") || "/default-avatar.png"}
+                  alt="overlay"
+                  className="w-full h-full object-cover opacity-0 group-hover:opacity-40 group-hover:blur-lg transition-all"
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  {uploading ? (
+                    <div className="w-6 h-6 border-2 border-white border-t-transparent animate-spin rounded-full" />
+                  ) : (
+                    <LuPencil className="h-6 w-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                  )}
+                </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  id="photoInput"
+                  onChange={handlePhotoChange}
+                  className="hidden"
+                />
+              </label>
+            </div>
 
             <div>
               <label className="block text-sm mb-1">Name</label>
               <input
-                {...register("username", { required: "Username is required" })}
+                {...register("username")}
                 className="bg-[#2a2a2a] w-full p-2 rounded"
               />
-              {errors.username && (
-                <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>
-              )}
+              {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>}
             </div>
 
             <div>
               <label className="block text-sm mb-1">Email</label>
               <input
-                {...register("email", { required: "Email is required" })}
+                {...register("email")}
                 className="bg-[#2a2a2a] w-full p-2 rounded"
               />
-              {errors.email && (
-                <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
-              )}
+              {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
             </div>
 
             <div>
@@ -190,58 +192,32 @@ const Profile = () => {
                 className="bg-[#2a2a2a] w-full p-2 rounded"
               />
             </div>
-            <div >
-          <button
-            type="submit"
-            className="bg-[#01b19d] p-2.5 w-full mb-4 mt-4 font-semibold text-black rounded hover:bg-[#01b19cdd] cursor-pointer"
-          >
-            Save Changes
-          </button>
-        </div>
+
+            <div>
+              <button type="submit" className="bg-[#01b19d] p-2.5 w-full mb-4 mt-4 font-semibold cursor-pointer text-black rounded hover:bg-[#01b19cdd]">
+                Save Changes
+              </button>
+            </div>
           </div>
         )}
 
         {activeTab === "social" && (
           <div className="space-y-6 p-6">
-            <div>
-              <label className="block text-sm mb-1">Instagram</label>
-              <input
-                {...register("instagram")}
-                className="bg-[#2a2a2a] w-full p-2 rounded"
-              />
-            </div>
-            <div>
-              <label className="block text-sm mb-1">LinkedIn</label>
-              <input
-                {...register("linkedin")}
-                className="bg-[#2a2a2a] w-full p-2 rounded"
-              />
-            </div>
-            <div>
-              <label className="block text-sm mb-1">GitHub</label>
-              <input
-                {...register("github")}
-                className="bg-[#2a2a2a] w-full p-2 rounded"
-              />
-            </div>
-            <div>
-              <label className="block text-sm mb-1">Facebook</label>
-              <input
-                {...register("facebook")}
-                className="bg-[#2a2a2a] w-full p-2 rounded"
-              />
-            </div>
-            <div >
-          <button
-            type="submit"
-            className="bg-[#01b19d] p-2.5 w-full mb-4 mt-4 font-semibold text-black rounded hover:bg-[#01b19cdd] cursor-pointer"
-          >
-            Save Changes
-          </button>
-        </div>
+            {["instagram", "linkedin", "github", "facebook"].map((platform) => (
+              <div key={platform}>
+                <label className="block text-sm mb-1">{platform.charAt(0).toUpperCase() + platform.slice(1)}</label>
+                <input
+                  {...register(platform)}
+                  className="bg-[#2a2a2a] w-full p-2 rounded"
+                />
+                {errors[platform] && <p className="text-red-500 text-sm mt-1">{errors[platform]?.message}</p>}
+              </div>
+            ))}
+            <button type="submit" className="bg-[#01b19d] p-2.5 w-full mb-4 mt-4 font-semibold cursor-pointer text-black rounded hover:bg-[#01b19cdd]">
+              Save Changes
+            </button>
           </div>
         )}
-
       </div>
     </form>
   );

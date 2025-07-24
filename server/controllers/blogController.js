@@ -63,13 +63,7 @@ catch(err)
 export const allBlogs=async(req,res)=>{
     try
     {
-        const category=req.query.category;
-        let filters={};
-        if(category)
-        {
-            filters.category=category;
-        }
-        const allBlogs=await Blog.find(filters).populate('author', 'username').sort({createdAt: -1});
+        const allBlogs=await Blog.find({}).populate('author', 'username').sort({createdAt: -1});
         return res.status(200).json({
             success:true,
             allBlogs
@@ -112,6 +106,26 @@ export const searchedBlogs=async(req,res)=>{
         })
     }
 }   
+
+export const categoryFilter=async(req, res)=>{
+    try{
+    const category=req.query.category;
+    const categoryFilter = await Blog.find({
+        category
+    })
+    return res.status(200).json({
+        success:'true',
+        categoryFilter
+    })
+}
+catch(err)
+{
+    return res.status(400).json({
+        success:false,
+        message:err?.message
+    })
+}
+}
 
 
 

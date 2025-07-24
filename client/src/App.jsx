@@ -25,6 +25,9 @@ function App() {
     if (isLoggedIn) {
       navigate("/Blogs");
     }
+    else{
+      navigate("/");
+    }
   }, [isLoggedIn]);
 
 

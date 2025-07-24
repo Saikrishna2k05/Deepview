@@ -5,8 +5,8 @@ import toast from 'react-hot-toast';
 import BlogCard from '../components/BlogCard.jsx';
 import BlogSkeleton from '../components/BlogSkeleton.jsx';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAllBlogs, adminDeleteBlogs, searchBlogs } from '../redux/blogSlice.js';
-import { useSearchParams } from 'react-router-dom';
+import { fetchAllBlogs, adminDeleteBlogs, searchBlogs, setLastFetchedQuery, categoryFilter } from '../redux/blogSlice.js';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import ConfirmDeleteModal from '../components/ConfirmDeleteModal';
 
 const Blogs = () => {
@@ -14,30 +14,29 @@ const Blogs = () => {
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('search') || '';
   const categoryQuery = searchParams.get('category') || '';
-
-  const { blogs, searchResults, loading } = useSelector((state) => state.blog);
-
+  const { blogs, searchResults, loading , categoryBlogs} = useSelector((state) => state.blog);
+  
   const [showModal, setShowModal] = useState(false);
   const [selectedBlogId, setSelectedBlogId] = useState(null);
-
-  const lastFetchedQuery = useRef(null);
-
+  const lastFetchedQuery = useSelector(state => state.blog.lastFetchedQuery);
   useEffect(() => {
     const currentQuery = { search: searchQuery, category: categoryQuery };
-
-    if (JSON.stringify(currentQuery) === JSON.stringify(lastFetchedQuery.current)) {
+    if (JSON.stringify(currentQuery) === JSON.stringify(lastFetchedQuery)) {
       return;
     }
-
     if (searchQuery) {
-      dispatch(searchBlogs({ search: searchQuery }));
-    } else {
-      if (blogs.length === 0 || categoryQuery !== lastFetchedQuery.current?.category) {
-        dispatch(fetchAllBlogs({ category: categoryQuery }));
+      dispatch(searchBlogs({ search: searchQuery}));      
+    }
+    else if(categoryQuery  && categoryQuery !== lastFetchedQuery?.category)
+      {
+        dispatch(categoryFilter({category: categoryQuery}));
+      } 
+    else {
+      if (blogs.length === 0 ) {
+        dispatch(fetchAllBlogs());
       }
     }
-  
-    lastFetchedQuery.current = currentQuery;
+      dispatch(setLastFetchedQuery(currentQuery));
 
   }, [dispatch, searchQuery, categoryQuery, blogs.length]);
 
@@ -58,7 +57,7 @@ const Blogs = () => {
     }
   };
 
-  const visibleBlogs = searchQuery ? searchResults : blogs;
+  let visibleBlogs = searchQuery ? searchResults : (categoryQuery?categoryBlogs: blogs);  
   const showNoBlogsFound = !loading && visibleBlogs.length === 0;
 
   return (
