@@ -10,7 +10,6 @@ import { logoutUser } from '../redux/authSlice'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import ProfileDropdown from './ProfileDropdown.jsx'
-import { fetchAllBlogs } from '../redux/blogSlice.js'
 import { useLocation } from 'react-router-dom';
 import { useDebounce } from './UseDebounce.jsx'
 import {clearPhoto} from '../redux/userSlice.js'
@@ -52,6 +51,11 @@ const Navbar = () => {
   useEffect(() => {
     const params=new URLSearchParams();
     params.set("search", debouncedValue);
+      if(debouncedValue=='')
+      {
+        navigate('/Blogs');
+        return;
+      }
       if(location.pathname == '/Blogs') 
       {
       navigate(`/Blogs?${params.toString()}`);

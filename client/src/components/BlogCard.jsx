@@ -8,7 +8,6 @@ const BlogCard = ({ thumbnail, title, author, category, subtitle, createdAt, _id
   const navigate = useNavigate();
   const role = useSelector((state) => state.auth.user?.role);
   const formattedDate = format(new Date(createdAt), 'dd/MM/yy');
-
   const readMoreHandler = () => {
     navigate(`/Blogs/${_id}`);
   };

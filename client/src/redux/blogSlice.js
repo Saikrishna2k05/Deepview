@@ -2,15 +2,11 @@ import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 import axios from 'axios'
 import { deleteUser } from './userSlice.js';
 
-export const fetchAllBlogs=createAsyncThunk('fetchBlogs',async({search = "" , category=""}, { rejectWithValue })=>{
+export const fetchAllBlogs=createAsyncThunk('fetchBlogs',async({category=""}, { rejectWithValue })=>{
     try
     {
       const params=new URLSearchParams();
       
-      if(search)
-      {
-        params.append("search", search);
-      }
       if(category)
       {
         params.append("category", category);
@@ -22,8 +18,8 @@ export const fetchAllBlogs=createAsyncThunk('fetchBlogs',async({search = "" , ca
       if (queryString) {
         baseUrl += `?${queryString}`;
       }
-    const response=await axios.get(baseUrl,{withCredentials: true} )
-    return response.data.allBlogs;
+    const response=await axios.get(baseUrl,{withCredentials: true} );    
+    return response.data;
     }
     catch(err)
     {
@@ -31,6 +27,31 @@ export const fetchAllBlogs=createAsyncThunk('fetchBlogs',async({search = "" , ca
     }
 })
 
+
+export const searchBlogs=createAsyncThunk('searchBlogs',async({search = "" }, { rejectWithValue })=>{
+    try
+    {
+      const params=new URLSearchParams();
+      
+      if(search)
+      {
+        params.append("search", search);
+      }
+    
+      let baseUrl = 'http://localhost:3000/blog/searchBlogs';
+      const queryString = params.toString();
+      
+      if (queryString) {
+        baseUrl += `?${queryString}`;
+      }
+    const response=await axios.get(baseUrl,{withCredentials: true} );    
+    return response.data.searchBlogs;
+    }
+    catch(err)
+    {
+      return rejectWithValue(err.response?.data?.message || err.message);
+    }
+})
 export const addBlog = createAsyncThunk(
   'addBlogs',
   async (blogData, { rejectWithValue }) => 
@@ -115,17 +136,20 @@ const blogSlice=createSlice({
     initialState:
     {
     blogs: [],
+    searchResults:[],
     userBlogs:[],
     loading: false,
     },
-     reducers: {}, 
+     reducers: {     }, 
     extraReducers:(builder)=>{
+
+
         builder.addCase(fetchAllBlogs.pending,(state)=>{
         state.loading = true;
         })
         .addCase(fetchAllBlogs.fulfilled, (state, action) => {
         state.loading = false;
-        state.blogs = action.payload;
+        state.blogs = action.payload.allBlogs;
       })
       .addCase(fetchAllBlogs.rejected, (state, action) => {
         state.loading = false;
@@ -161,6 +185,16 @@ const blogSlice=createSlice({
         const deletedUserId = action.payload;
         state.blogs=state.blogs.filter((blog)=>blog.author._id!=deletedUserId)
     })
+    .addCase(searchBlogs.pending, (state, _)=>
+    {
+        state.loading = true;
+    }
+    )
+    .addCase(searchBlogs.fulfilled, (state, action)=>{
+       state.loading = false;
+        state.searchResults=action.payload;
+    })
     }
 })
+
 export default blogSlice.reducer;

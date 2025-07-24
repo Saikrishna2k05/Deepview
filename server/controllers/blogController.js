@@ -63,17 +63,8 @@ catch(err)
 export const allBlogs=async(req,res)=>{
     try
     {
-        const search=req.query.search;
         const category=req.query.category;
         let filters={};
-        if(search)
-        {
-            const regex=new RegExp(search,"i");
-            filters.$or=[
-                {title: {$regex: regex}},
-                {subtitle: {$regex: regex}},
-            ]
-        }
         if(category)
         {
             filters.category=category;
@@ -94,6 +85,35 @@ export const allBlogs=async(req,res)=>{
         })
     }
 }
+
+export const searchedBlogs=async(req,res)=>{
+    try{
+        const search=req.query.search;
+        let filters={};
+        if(search)
+        {
+            const regex=new RegExp(search,"i");
+            filters.$or=[
+                    {title: {$regex: regex}},
+                    {subtitle: {$regex: regex}},
+                ]
+        }
+        const searchBlogs=await Blog.find(filters).populate('author', 'username').sort({createdAt: -1});
+        return res.status(200).json({
+                success:true,
+                searchBlogs
+            })
+    }
+    catch(err)
+    {
+           return res.status(400).json({
+            success:false,
+            message:"Failed to fetch Blogs"
+        })
+    }
+}   
+
+
 
 export const getBlogByID=async(req, res)=>{
     try

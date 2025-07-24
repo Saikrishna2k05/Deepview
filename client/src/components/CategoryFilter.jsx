@@ -17,7 +17,7 @@ export default function CategoryFilter() {
     if(category=='All')
     {
       navigate('/Blogs');
-      dispatch(fetchAllBlogs({ search: "", category: "" }));
+      dispatch(fetchAllBlogs({category: "" }));
       return;
 
     }
