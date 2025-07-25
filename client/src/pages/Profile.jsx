@@ -11,10 +11,15 @@ import { LuPencil } from 'react-icons/lu';
 // Zod Schema
 const schema = z.object({
   username: z.string().min(1, { message: "Username is required" }),
-  email: z.string().trim().min(1, { message: "Email is required" }).email({ message: "Enter a valid email address" }),
+  email: z.string().email().optional(),
   bio: z.string().optional(),
   occupation: z.string().optional(),
-  photoUrl: z.string().url().optional(),
+  photoUrl: z
+  .string()
+  .url("Invalid URL")
+  .or(z.literal(""))
+  .optional(),
+
   instagram: z.string().url("Invalid URL").or(z.literal("")).optional(),
   linkedin: z.string().url("Invalid URL").or(z.literal("")).optional(),
   github: z.string().url("Invalid URL").or(z.literal("")).optional(),
@@ -81,6 +86,7 @@ const Profile = () => {
 
   const onSubmit = async (data) => {
     try {
+       console.log("Form submitted with data:", data);
       const res = await axios.put(
         'http://localhost:3000/user/updateProfile',
         data,
@@ -96,7 +102,11 @@ const Profile = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex min-h-[calc(100vh-4rem)] bg-black text-white">
+    
+    <form onSubmit={handleSubmit(
+    onSubmit 
+  )} 
+ className="flex min-h-[calc(100vh-4rem)] bg-black text-white">
       <div className="w-64 p-4 border-r border-[#2a2a2a]">
         <div className="space-y-2">
           <button
@@ -172,9 +182,9 @@ const Profile = () => {
               <label className="block text-sm mb-1">Email</label>
               <input
                 {...register("email")}
-                className="bg-[#2a2a2a] w-full p-2 rounded"
+                readOnly
+                className="bg-[#2a2a2a] w-full p-2 rounded hover:cursor-not-allowed"
               />
-              {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
             </div>
 
             <div>
