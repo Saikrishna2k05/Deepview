@@ -20,15 +20,15 @@ import { useSelector } from 'react-redux'
 
 function App() {
     const navigate = useNavigate();
-    const isLoggedIn = useSelector((state) => state.auth.isAuthenticated);
-    useEffect(() => {
-    if (isLoggedIn) {
-      navigate("/Blogs");
-    }
-    else{
-      navigate("/");
-    }
-  }, [isLoggedIn]);
+  //   const isLoggedIn = useSelector((state) => state.auth.isAuthenticated);
+  //   useEffect(() => {
+  //   if (isLoggedIn) {
+  //     navigate("/Blogs");
+  //   }
+  //   else{
+  //     navigate("/");
+  //   }
+  // }, [isLoggedIn]);
 
 
   return (

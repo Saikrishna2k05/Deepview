@@ -34,10 +34,6 @@ const Navbar = () => {
       navigate('/Blogs');
       return;
     }
-    else{
-      navigate('/');
-      return;
-    }
   }
   useEffect(()=>{    
     if(location.pathname=="/Blogs")
@@ -49,18 +45,19 @@ const Navbar = () => {
     }
   },[location.pathname])
   useEffect(() => {
-    const params=new URLSearchParams();
-    params.set("search", debouncedValue);
-      if(debouncedValue=='')
-      {
-        navigate('/Blogs');
-        return;
-      }
-      if(location.pathname == '/Blogs') 
-      {
-      navigate(`/Blogs?${params.toString()}`);
-      } 
-  }, [debouncedValue]);
+  if (location.pathname !== '/Blogs') return;
+
+  const params = new URLSearchParams();
+  params.set("search", debouncedValue);
+
+  if (debouncedValue === '') {
+    navigate('/Blogs');
+    return;
+  }
+
+  navigate(`/Blogs?${params.toString()}`);
+}, [debouncedValue, location.pathname]);
+
 
   async function logoutHandler()
   {
